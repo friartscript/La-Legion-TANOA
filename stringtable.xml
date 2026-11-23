@@ -3580,5 +3580,39 @@ Sadece hassas atış. Hedef araç yakınında patlayıcı yasaktır.</Turkish>
             <Chinesesimp>防御</Chinesesimp>
             <Turkish>Savunma</Turkish>
         </Key>
+        <Key ID="STR_LL_Action_TeleportStuck">
+            <Original>Teleport Unit (%1)</Original>
+            <English>Teleport Unit (%1)</English>
+            <French>Téléporter l'unité (%1)</French>
+            <Spanish>Teletransportar unidad (%1)</Spanish>
+            <German>Einheit teleportieren (%1)</German>
+            <Italian>Teletrasporta unità (%1)</Italian>
+            <Polish>Teleportuj jednostkę (%1)</Polish>
+            <Portuguese>Teletransportar unidade (%1)</Portuguese>
+            <Russian>Телепортировать бойца (%1)</Russian>
+            <Czech>Teleportovat jednotku (%1)</Czech>
+            <Korean>유닛 순간이동 (%1)</Korean>
+            <Japanese>ユニットをテレポート (%1)</Japanese>
+            <Chinese>傳送單位 (%1)</Chinese>
+            <Chinesesimp>传送单位 (%1)</Chinesesimp>
+            <Turkish>Birimi Işınla (%1)</Turkish>
+        </Key>
+        <Key ID="STR_LL_Stuck_Teleported">
+            <Original>%1 has been regrouped near the leader.</Original>
+            <English>%1 has been regrouped near the leader.</English>
+            <French>%1 a été regroupé près du leader.</French>
+            <Spanish>%1 ha sido reagrupado cerca del líder.</Spanish>
+            <German>%1 wurde beim Gruppenführer neu formiert.</German>
+            <Italian>%1 è stato raggruppato vicino al leader.</Italian>
+            <Polish>%1 został przegrupowany przy dowódcy.</Polish>
+            <Portuguese>%1 foi reagrupado perto do líder.</Portuguese>
+            <Russian>%1 перегруппирован рядом с командиром.</Russian>
+            <Czech>%1 byl přeskupen poblíž velitele.</Czech>
+            <Korean>%1 대원이 분대장 근처로 재집결했습니다.</Korean>
+            <Japanese>%1 がリーダーの近くに再集結しました。</Japanese>
+            <Chinese>%1 已在隊長附近重整。</Chinese>
+            <Chinesesimp>%1 已在队长附近重整。</Chinesesimp>
+            <Turkish>%1 liderin yakınında yeniden toplandı.</Turkish>
+        </Key>
     </Package>
 </Project>

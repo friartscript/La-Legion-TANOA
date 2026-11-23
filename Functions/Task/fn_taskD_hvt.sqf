@@ -6,6 +6,36 @@ params [
 
 if (_locMarker == "" || !(_locMarker in allMapMarkers)) exitWith { missionNamespace setVariable ["LL_g_taskInProgress", false, true]; false };
 
+private _fnc_findSafeLandPos = {
+    params ["_center", "_minDist", "_maxDist", ["_prefDir", -1], ["_dirArc", 120]];
+    private _res = [];
+    for "_attempt" from 1 to 24 do {
+        private _d = if (_prefDir >= 0) then {
+            (_prefDir - (_dirArc / 2) + random _dirArc + 360) % 360
+        } else {
+            random 360
+        };
+        private _dist = _minDist + random ((_maxDist - _minDist) max 5);
+        private _test = _center getPos [_dist, _d];
+        if (!surfaceIsWater _test) exitWith {
+            _test set [2, 0];
+            _res = _test;
+        };
+    };
+    if (_res isEqualTo []) then {
+        for "_r" from _minDist to 10 step -10 do {
+            for "_stepD" from 0 to 315 step 45 do {
+                private _tp = _center getPos [_r, _stepD];
+                if (!surfaceIsWater _tp) exitWith { _res = _tp; };
+            };
+            if (!(_res isEqualTo [])) exitWith {};
+        };
+    };
+    if (_res isEqualTo []) then { _res = +_center; };
+    _res set [2, 0];
+    _res
+};
+
 private _centerPos = getMarkerPos _locMarker;
 private _radius = (markerSize _locMarker) select 0;
 if (_radius == 0) then { _radius = 250; };
@@ -100,6 +130,9 @@ private _allGroups = [];
 private _sentinelLogics = _otherLogics select [0, 4];
 {
     private _sPos = getPosATL _x;
+    if (surfaceIsWater _sPos) then {
+        _sPos = [_hvtPos, 15, 30] call _fnc_findSafeLandPos;
+    };
     _sPos set [2, (_sPos select 2) + 0.2];
     
     private _sGrp = createGroup [east, true];
@@ -127,28 +160,26 @@ private _sentinelLogics = _otherLogics select [0, 4];
     [_sentinel, _isSentinelFemale, true] call LL_fnc_applyTakistaniIdentity;
     
     _allGuards pushBack _sentinel;
-    sleep 0.2;
+    sleep 0.15;
 } forEach _sentinelLogics;
 
-private _patrolLogics = _otherLogics - _sentinelLogics;
-if (count _patrolLogics == 0) then {
-    _patrolLogics = if (count _otherLogics > 0) then { _otherLogics } else { _validSpawnPoints };
-};
+private _hvtPatrolConfigs = [
+    [3, 30, 60, 45, "SAFE"],
+    [3, 65, 110, 165, "SAFE"],
+    [3, 120, 190, 285, "AWARE"]
+];
 
-for "_p" from 1 to 2 do {
+{
+    _x params ["_sz", "_minD", "_maxD", "_baseDir", "_behav"];
     private _pGrp = createGroup [east, true];
-    _pGrp setBehaviour "SAFE";
+    _pGrp setBehaviour _behav;
     _pGrp setCombatMode "WHITE";
     _pGrp setSpeedMode "LIMITED";
     _allGroups pushBack _pGrp;
 
-    private _pStartPos = _hvtPos getPos [30 + random 50, random 360];
-    if (count _patrolLogics > 0) then {
-        _pStartPos = getPosATL (selectRandom _patrolLogics);
-    };
-    _pStartPos set [2, (_pStartPos select 2) + 0.2];
+    private _grpCenter = [_hvtPos, _minD, _maxD, _baseDir, 90] call _fnc_findSafeLandPos;
 
-    for "_g" from 1 to 2 do {
+    for "_g" from 1 to _sz do {
         private _fEnemyClasses = (missionNamespace getVariable ["MISSION_EnemyClasses_Female", []]) select { isClass (configFile >> "CfgVehicles" >> _x) };
         private _isPGuardFemale = (random 1) < 0.15 && { count _fEnemyClasses > 0 };
         private _pGuardClass = "O_G_Soldier_F";
@@ -158,20 +189,45 @@ for "_p" from 1 to 2 do {
                 _pGuardClass = _picked;
             };
         };
-        private _pGuard = _pGrp createUnit [_pGuardClass, _pStartPos, [], 0, "CAN_COLLIDE"];
+        private _pGuardSpot = [_grpCenter, 2, 7] call _fnc_findSafeLandPos;
+        _pGuardSpot set [2, (_hvtPos select 2) + 0.2];
+        private _pGuard = _pGrp createUnit [_pGuardClass, _pGuardSpot, [], 0, "CAN_COLLIDE"];
         [_pGuard] joinSilent _pGrp;
         _pGuard setVariable ["not_Random", true, true];
-        _pGuard setPosATL _pStartPos;
+        _pGuard setPosATL _pGuardSpot;
         _pGuard allowDamage false;
         [_pGuard] spawn { sleep 3; (_this select 0) allowDamage true; };
         [_pGuard, _isPGuardFemale, true] call LL_fnc_applyTakistaniIdentity;
         _allGuards pushBack _pGuard;
-        sleep 0.2;
+        sleep 0.15;
     };
 
-    [_pGrp, _pStartPos, 80] call BIS_fnc_taskPatrol;
+    private _wpPos1 = [_grpCenter, 10, 25, _baseDir - 35, 60] call _fnc_findSafeLandPos;
+    private _wpPos2 = [_grpCenter, 15, 35, _baseDir + 35, 60] call _fnc_findSafeLandPos;
+    private _wpPos3 = [_grpCenter, 5, 20, _baseDir + 180, 80] call _fnc_findSafeLandPos;
+
+    private _wp1 = _pGrp addWaypoint [_wpPos1, 0];
+    _wp1 setWaypointType "MOVE";
+    _wp1 setWaypointSpeed "LIMITED";
+    _wp1 setWaypointFormation "STAG COLUMN";
+    _wp1 setWaypointBehaviour _behav;
+    _wp1 setWaypointTimeout [4, 8, 14];
+
+    private _wp2 = _pGrp addWaypoint [_wpPos2, 0];
+    _wp2 setWaypointType "MOVE";
+    _wp2 setWaypointSpeed "LIMITED";
+    _wp2 setWaypointTimeout [4, 8, 14];
+
+    private _wp3 = _pGrp addWaypoint [_wpPos3, 0];
+    _wp3 setWaypointType "MOVE";
+    _wp3 setWaypointSpeed "LIMITED";
+    _wp3 setWaypointTimeout [4, 8, 14];
+
+    private _wp4 = _pGrp addWaypoint [_wpPos1, 0];
+    _wp4 setWaypointType "CYCLE";
+
     sleep 0.5;
-};
+} forEach _hvtPatrolConfigs;
 
 private _bgGrp = createGroup [east, true];
 _bgGrp setBehaviour "SAFE";
@@ -180,8 +236,8 @@ _allGroups pushBack _bgGrp;
 
 private _angles = [0, 120, 240];
 {
-    private _bgPos = _hvtPos getPos [3 + random 2, _x];
-    _bgPos set [2, (_bgPos select 2) + 0.2];
+    private _bgPos = [_hvtPos, 3, 5, _x, 40] call _fnc_findSafeLandPos;
+    _bgPos set [2, (_hvtPos select 2) + 0.2];
 
     private _fEnemyClasses = (missionNamespace getVariable ["MISSION_EnemyClasses_Female", []]) select { isClass (configFile >> "CfgVehicles" >> _x) };
     private _isBgFemale = (random 1) < 0.15 && { count _fEnemyClasses > 0 };

@@ -41,28 +41,59 @@ private _groups = [];
 private _classes = ["O_G_Soldier_F", "O_G_Soldier_GL_F", "O_G_Soldier_AR_F", "O_G_Soldier_LAT_F"];
 private _fEnemyClasses = (missionNamespace getVariable ["MISSION_EnemyClasses_Female", []]) select { isClass (configFile >> "CfgVehicles" >> _x) };
 
+private _fnc_findSafeLandPos = {
+    params ["_center", "_minDist", "_maxDist", ["_prefDir", -1], ["_dirArc", 120]];
+    private _res = [];
+    for "_attempt" from 1 to 24 do {
+        private _d = if (_prefDir >= 0) then {
+            (_prefDir - (_dirArc / 2) + random _dirArc + 360) % 360
+        } else {
+            random 360
+        };
+        private _dist = _minDist + random ((_maxDist - _minDist) max 5);
+        private _test = _center getPos [_dist, _d];
+        if (!surfaceIsWater _test) exitWith {
+            _test set [2, 0];
+            _res = _test;
+        };
+    };
+    if (_res isEqualTo []) then {
+        for "_r" from _minDist to 10 step -10 do {
+            for "_stepD" from 0 to 315 step 45 do {
+                private _tp = _center getPos [_r, _stepD];
+                if (!surfaceIsWater _tp) exitWith { _res = _tp; };
+            };
+            if (!(_res isEqualTo [])) exitWith {};
+        };
+    };
+    if (_res isEqualTo []) then { _res = +_center; };
+    _res set [2, 0];
+    _res
+};
+
 private _guardConfigs = [
-    [4, 8, 14, "SAFE"],
-    [4, 10, 16, "SAFE"],
-    [4, 18, 28, "SAFE"],
-    [4, 20, 32, "SAFE"],
-    [3, 35, 55, "AWARE"],
-    [3, 40, 60, "AWARE"],
-    [3, 22, 42, "SAFE"],
-    [3, 25, 45, "SAFE"]
+    [3, 15, 28, 45, "SAFE"],
+    [3, 18, 32, 225, "SAFE"],
+    [3, 45, 75, 120, "SAFE"],
+    [3, 50, 80, 300, "SAFE"],
+    [4, 95, 150, 0, "AWARE"],
+    [4, 95, 150, 180, "AWARE"],
+    [4, 165, 240, 90, "SAFE"],
+    [4, 170, 250, 270, "SAFE"]
 ];
 
 {
-    _x params ["_sz", "_minDist", "_maxDist", "_behav"];
+    _x params ["_sz", "_minDist", "_maxDist", "_baseDir", "_behav"];
     private _grp = createGroup [east, true];
     _grp setBehaviour _behav;
     _grp setSpeedMode "LIMITED";
     _grp setCombatMode "YELLOW";
 
+    private _grpCenter = [_posVeh, _minDist, _maxDist, _baseDir, 90] call _fnc_findSafeLandPos;
+
     for "_u" from 1 to _sz do {
         private _cls = selectRandom _classes;
-        private _dist = _minDist + random (_maxDist - _minDist);
-        private _spawnSpot = _posVeh getPos [_dist, random 360];
+        private _spawnSpot = [_grpCenter, 2, 8] call _fnc_findSafeLandPos;
         _spawnSpot set [2, (_spawnSpot select 2) + 0.2];
         private _isUnitFemale = (random 1) < 0.15 && { count _fEnemyClasses > 0 };
         private _unitClass = _cls;
@@ -83,19 +114,35 @@ private _guardConfigs = [
         _unit setSkill ["courage", 1];
         _unit allowFleeing 0;
         _enemies pushBack _unit;
-        sleep 0.2;
+        sleep 0.15;
     };
 
-    private _wp1 = _grp addWaypoint [_posVeh getPos [_minDist + 5, random 360], 0];
+    private _wpPos1 = [_grpCenter, 10, 25, _baseDir - 35, 60] call _fnc_findSafeLandPos;
+    private _wpPos2 = [_grpCenter, 15, 35, _baseDir + 35, 60] call _fnc_findSafeLandPos;
+    private _wpPos3 = [_grpCenter, 5, 20, _baseDir + 180, 80] call _fnc_findSafeLandPos;
+
+    private _wp1 = _grp addWaypoint [_wpPos1, 0];
     _wp1 setWaypointType "MOVE";
+    _wp1 setWaypointSpeed "LIMITED";
+    _wp1 setWaypointFormation "STAG COLUMN";
     _wp1 setWaypointBehaviour _behav;
-    private _wp2 = _grp addWaypoint [_posVeh getPos [_maxDist, random 360], 0];
+    _wp1 setWaypointTimeout [4, 8, 14];
+
+    private _wp2 = _grp addWaypoint [_wpPos2, 0];
     _wp2 setWaypointType "MOVE";
-    private _wp3 = _grp addWaypoint [waypointPosition _wp1, 0];
-    _wp3 setWaypointType "CYCLE";
+    _wp2 setWaypointSpeed "LIMITED";
+    _wp2 setWaypointTimeout [4, 8, 14];
+
+    private _wp3 = _grp addWaypoint [_wpPos3, 0];
+    _wp3 setWaypointType "MOVE";
+    _wp3 setWaypointSpeed "LIMITED";
+    _wp3 setWaypointTimeout [4, 8, 14];
+
+    private _wp4 = _grp addWaypoint [_wpPos1, 0];
+    _wp4 setWaypointType "CYCLE";
 
     _groups pushBack _grp;
-    sleep 1.5;
+    sleep 0.5;
 } forEach _guardConfigs;
 
 sleep 0.5;

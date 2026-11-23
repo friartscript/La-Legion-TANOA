@@ -8,6 +8,36 @@ if (_locMarker == "" || { !(_locMarker in allMapMarkers) }) exitWith {
     missionNamespace setVariable ["LL_g_taskInProgress", false, true];
 };
 
+private _fnc_findSafeLandPos = {
+    params ["_center", "_minDist", "_maxDist", ["_prefDir", -1], ["_dirArc", 120]];
+    private _res = [];
+    for "_attempt" from 1 to 24 do {
+        private _d = if (_prefDir >= 0) then {
+            (_prefDir - (_dirArc / 2) + random _dirArc + 360) % 360
+        } else {
+            random 360
+        };
+        private _dist = _minDist + random ((_maxDist - _minDist) max 5);
+        private _test = _center getPos [_dist, _d];
+        if (!surfaceIsWater _test) exitWith {
+            _test set [2, 0];
+            _res = _test;
+        };
+    };
+    if (_res isEqualTo []) then {
+        for "_r" from _minDist to 10 step -10 do {
+            for "_stepD" from 0 to 315 step 45 do {
+                private _tp = _center getPos [_r, _stepD];
+                if (!surfaceIsWater _tp) exitWith { _res = _tp; };
+            };
+            if (!(_res isEqualTo [])) exitWith {};
+        };
+    };
+    if (_res isEqualTo []) then { _res = +_center; };
+    _res set [2, 0];
+    _res
+};
+
 private _centerPos = getMarkerPos _locMarker;
 if (_centerPos isEqualTo [0, 0, 0]) exitWith {
     missionNamespace setVariable ["LL_g_taskInProgress", false, true];
@@ -98,18 +128,22 @@ if (!isNull _nearBldg && { _spawnPos distance2D _nearBldg < 35 }) then {
 
 private _allUnits = [];
 
-private _numGroups = 3;
-for "_i" from 0 to (_numGroups - 1) do {
+private _captivePatrolConfigs = [
+    [2, 6, 14, 45, "SAFE"],
+    [3, 35, 65, 165, "SAFE"],
+    [3, 85, 150, 285, "AWARE"]
+];
+
+{
+    _x params ["_sz", "_minD", "_maxD", "_baseDir", "_behav"];
     private _grpEnemy = createGroup [east, true];
-    _grpEnemy setBehaviour "SAFE";
+    _grpEnemy setBehaviour _behav;
+    _grpEnemy setSpeedMode "LIMITED";
     _grpEnemy setCombatMode "RED";
 
-    private _numGuards = 2 + floor (random 2);
-    for "_g" from 1 to _numGuards do {
-        sleep 0.4;
-        private _guardPos = _spawnPos getPos [1 + random 3, random 360];
-        _guardPos set [2, 0.1];
-        
+    private _grpCenter = [_spawnPos, _minD, _maxD, _baseDir, 90] call _fnc_findSafeLandPos;
+
+    for "_g" from 1 to _sz do {
         private _fClasses = (missionNamespace getVariable ["MISSION_EnemyClasses_Female", []]) select { isClass (configFile >> "CfgVehicles" >> _x) };
         private _isGuardFemale = (random 1) < 0.20 && { count _fClasses > 0 };
         private _guardClass = "O_G_Soldier_F";
@@ -119,10 +153,12 @@ for "_i" from 0 to (_numGroups - 1) do {
                 _guardClass = _picked;
             };
         };
-        private _guard = _grpEnemy createUnit [_guardClass, _guardPos, [], 0, "CAN_COLLIDE"];
+        private _guardSpot = [_grpCenter, 2, 6] call _fnc_findSafeLandPos;
+        _guardSpot set [2, 0.1];
+        private _guard = _grpEnemy createUnit [_guardClass, _guardSpot, [], 0, "CAN_COLLIDE"];
         [_guard] joinSilent _grpEnemy;
         _guard setVariable ["not_Random", true, true];
-        _guard setPosATL _guardPos;
+        _guard setPosATL _guardSpot;
         _guard allowDamage false;
         _guard setDamage 0;
         _guard setBleedingRemaining 0;
@@ -136,11 +172,35 @@ for "_i" from 0 to (_numGroups - 1) do {
         };
         [_guard, _isGuardFemale, true] call LL_fnc_applyTakistaniIdentity;
         _allUnits pushBack _guard;
+        sleep 0.15;
     };
 
-    private _currentRadius = round (15 + (_i * 15) + (random 10));
-    [_grpEnemy, _spawnPos, _currentRadius] call BIS_fnc_taskPatrol;
-};
+    private _wpPos1 = [_grpCenter, 10, 25, _baseDir - 35, 60] call _fnc_findSafeLandPos;
+    private _wpPos2 = [_grpCenter, 15, 35, _baseDir + 35, 60] call _fnc_findSafeLandPos;
+    private _wpPos3 = [_grpCenter, 5, 20, _baseDir + 180, 80] call _fnc_findSafeLandPos;
+
+    private _wp1 = _grpEnemy addWaypoint [_wpPos1, 0];
+    _wp1 setWaypointType "MOVE";
+    _wp1 setWaypointSpeed "LIMITED";
+    _wp1 setWaypointFormation "STAG COLUMN";
+    _wp1 setWaypointBehaviour _behav;
+    _wp1 setWaypointTimeout [4, 8, 14];
+
+    private _wp2 = _grpEnemy addWaypoint [_wpPos2, 0];
+    _wp2 setWaypointType "MOVE";
+    _wp2 setWaypointSpeed "LIMITED";
+    _wp2 setWaypointTimeout [4, 8, 14];
+
+    private _wp3 = _grpEnemy addWaypoint [_wpPos3, 0];
+    _wp3 setWaypointType "MOVE";
+    _wp3 setWaypointSpeed "LIMITED";
+    _wp3 setWaypointTimeout [4, 8, 14];
+
+    private _wp4 = _grpEnemy addWaypoint [_wpPos1, 0];
+    _wp4 setWaypointType "CYCLE";
+
+    sleep 0.5;
+} forEach _captivePatrolConfigs;
 
 sleep 1.5;
 

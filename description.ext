@@ -157,6 +157,7 @@ class CfgFunctions
             class identityManager {};
             class randomizeLoadout {};
             class reloadWeapons {};
+            class stuckUnitManager {};
             class switchToAI {};
         };
 

@@ -230,6 +230,7 @@ for "_i" from 0 to 6 do {
         }];
         
         [_lastPlayer] call LL_fnc_addRoeActions;
+        [] spawn LL_fnc_stuckUnitManager;
         [] call LL_fnc_initSupport;
         [] call LL_fnc_initBriefing;
         [] call LL_fnc_initContext;

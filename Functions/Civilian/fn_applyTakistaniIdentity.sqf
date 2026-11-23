@@ -211,6 +211,8 @@ if (!_isEnemy) then {
             };
         };
         _unit addWeapon _weapon;
+        _unit addPrimaryWeaponItem "acc_flashlight";
+        (group _unit) enableGunLights "Auto";
     };
 
     _unit addItem "FirstAidKit";
