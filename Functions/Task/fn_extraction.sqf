@@ -58,7 +58,6 @@ _heli addEventHandler ["Killed", {
 
 ["task_extraction", true] remoteExec ["BIS_fnc_taskSetCurrent", 0, true];
 ["task_extraction", true] call BIS_fnc_taskSetCurrent;
-call LL_fnc_saveProgress;
 
 createVehicleCrew _heli;
 private _crew = crew _heli;
@@ -389,7 +388,6 @@ _wpEnd setWaypointCombatMode "BLUE";
 _heli doMove _endPos;
 
 ["task_extraction", "SUCCEEDED", true] call BIS_fnc_taskSetState;
-call LL_fnc_saveProgress;
 
 sleep 75;
 
