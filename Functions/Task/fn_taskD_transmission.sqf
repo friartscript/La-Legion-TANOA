@@ -1,0 +1,241 @@
+if (!isServer) exitWith {};
+
+params [
+    ["_locMarker", "", [""]]
+];
+
+if (_locMarker == "" || !(_locMarker in allMapMarkers)) exitWith { missionNamespace setVariable ["LL_g_taskInProgress", false, true]; false };
+
+private _centerPos = getMarkerPos _locMarker;
+private _radius = (markerSize _locMarker) select 0;
+if (_radius == 0) then { _radius = 250; };
+private _nearHelipads = nearestObjects [_centerPos, ["Land_HelipadEmpty_F"], _radius];
+private _nearLogics = nearestObjects [_centerPos, ["Logic"], _radius];
+
+private _usedPositions = missionNamespace getVariable ["LL_g_usedTaskPos", []];
+private _validSpawnPoints = (_nearLogics + _nearHelipads) select {
+    private _candidate = _x;
+    !(_candidate getVariable ["LL_logic_occupied", false]) &&
+    { (_usedPositions findIf { _x distance2D _candidate < 20 }) == -1 }
+};
+
+if (count _validSpawnPoints < 2) then {
+    while { count _validSpawnPoints < 2 } do {
+        private _dummyLogic = "Logic" createVehicleLocal (_centerPos getPos [100 + random 200, random 360]);
+        _validSpawnPoints pushBack _dummyLogic;
+    };
+};
+
+private _numRadios = (1 + floor (random 2)) min (count _validSpawnPoints);
+private _shuffled = _validSpawnPoints call BIS_fnc_arrayShuffle;
+private _selectedLogics = _shuffled select [0, _numRadios];
+
+{
+    _x setVariable ["LL_logic_occupied", true];
+    private _p = getPosATL _x;
+    if (_p isEqualTo [0,0,0]) then { _p = getPos _x; };
+    _usedPositions pushBack _p;
+} forEach _selectedLogics;
+missionNamespace setVariable ["LL_g_usedTaskPos", _usedPositions];
+
+missionNamespace setVariable ["LL_TaskD_Trans_AllUnits", [], true];
+missionNamespace setVariable ["LL_TaskD_Trans_Destroyed", 0, true];
+missionNamespace setVariable ["LL_TaskD_Trans_Total", _numRadios, true];
+
+private _firstLogicPos = getPosATL (_selectedLogics select 0);
+if (_firstLogicPos isEqualTo [0,0,0]) then { _firstLogicPos = getPos (_selectedLogics select 0); };
+
+[
+    group player,
+    ["task_d_transmission"],
+    [
+        localize "STR_LL_Task_D_Transmission_Desc",
+        localize "STR_LL_Task_D_Transmission_Title",
+        localize "STR_LL_Task_D_Transmission_Marker"
+    ],
+    _firstLogicPos,
+    "AUTOASSIGNED",
+    5,
+    true,
+    "destroy",
+    false
+] call BIS_fnc_taskCreate;
+call LL_fnc_saveProgress;
+
+{ _x createDiaryRecord ["diary", [localize "STR_LL_Diary_TaskD_Transmission_Title", localize "STR_LL_Diary_TaskD_Transmission_Text"]]; } forEach (units group player);
+
+for "_i" from 0 to (_numRadios - 1) do {
+    private _logic = _selectedLogics select _i;
+    private _spawnPos = getPosATL _logic;
+    if (_spawnPos isEqualTo [0,0,0]) then { _spawnPos = getPos _logic; };
+    _spawnPos set [2, (_spawnPos select 2) + 0.2];
+
+    private _zoneGuards = [];
+
+    private _transPatrols = [
+        [3, 8, 16, "SAFE"],
+        [3, 25, 45, "AWARE"]
+    ];
+
+    {
+        _x params ["_sz", "_minD", "_maxD", "_behav"];
+        private _grp = createGroup [east, true];
+        _grp setBehaviour _behav;
+        _grp setCombatMode "YELLOW";
+
+        for "_g" from 1 to _sz do {
+            private _guardPos = _spawnPos getPos [_minD + random (_maxD - _minD), random 360];
+            _guardPos set [2, (_spawnPos select 2) + 0.2];
+            private _fEnemyClasses = (missionNamespace getVariable ["MISSION_EnemyClasses_Female", []]) select { isClass (configFile >> "CfgVehicles" >> _x) };
+            private _isGuardFemale = (random 1) < 0.15 && { count _fEnemyClasses > 0 };
+            private _guardClass = "O_G_Soldier_F";
+            if (_isGuardFemale) then {
+                private _picked = selectRandom _fEnemyClasses;
+                if (!isNil "_picked" && { _picked != "" }) then {
+                    _guardClass = _picked;
+                };
+            };
+            private _guard = _grp createUnit [_guardClass, _guardPos, [], 0, "CAN_COLLIDE"];
+            [_guard] joinSilent _grp;
+            _guard setVariable ["not_Random", true, true];
+            _guard setPosATL _guardPos;
+            _guard allowDamage false;
+            [_guard] spawn { sleep 3; if (!isNull (_this select 0)) then { (_this select 0) allowDamage true; }; };
+            [_guard, _isGuardFemale, true] call LL_fnc_applyTakistaniIdentity;
+            _zoneGuards pushBack _guard;
+            sleep 0.2;
+        };
+        [_grp, _spawnPos, _maxD] call BIS_fnc_taskPatrol;
+        sleep 1.5;
+    } forEach _transPatrols;
+
+    private _allUnits = missionNamespace getVariable ["LL_TaskD_Trans_AllUnits", []];
+    _allUnits append _zoneGuards;
+    missionNamespace setVariable ["LL_TaskD_Trans_AllUnits", _allUnits, true];
+
+    private _radioClass = "RuggedTerminal_01_communications_F";
+    private _radio = createVehicle [_radioClass, _spawnPos, [], 0, "CAN_COLLIDE"];
+    _radio setPosATL [_spawnPos select 0, _spawnPos select 1, (_spawnPos select 2) - 0.2];
+    _radio setDir (getDir _logic);
+    _radio setVectorUp [0, 0, 1];
+
+    _radio allowDamage false;
+    [_radio] spawn { sleep 3; (_this select 0) allowDamage true; };
+
+    private _taskChildId = format ["task_d_transmission_radio_%1", _i];
+    [
+        group player,
+        [_taskChildId, "task_d_transmission"],
+        [
+            localize "STR_LL_Task_D_Transmission_Sub_Desc",
+            localize "STR_LL_Task_D_Transmission_Sub_Title",
+            localize "STR_LL_Task_D_Transmission_Sub_Marker"
+        ],
+        [_radio, true],
+        "AUTOASSIGNED",
+        4,
+        true,
+        "destroy",
+        false
+    ] call BIS_fnc_taskCreate;
+
+    _radio addAction [
+        format ["<t color='#FFFF00'>%1</t>", localize "STR_LL_Task_D_Transmission_Action"],
+        {
+            params ["_target", "_caller", "_actionId", "_arguments"];
+            _arguments params ["_radio", "_taskChildId"];
+
+            if (_radio getVariable ["LL_TaskD_Trans_Triggered", false]) exitWith {};
+            _radio setVariable ["LL_TaskD_Trans_Triggered", true, true];
+
+            _target removeAction _actionId;
+            _caller playActionNow "PutDown";
+
+            private _pos = getPosATL _radio;
+            private _charge = createVehicle ["DemoCharge_F", _pos, [], 0, "CAN_COLLIDE"];
+            _charge attachTo [_radio, [0, 0, 0.2]];
+            _charge setVectorUp [0, 0, 1];
+
+            [_radio, _charge, _taskChildId] spawn {
+                params ["_radio", "_charge", "_taskChildId"];
+
+                private _light = "#lightpoint" createVehicleLocal (getPosATL _charge);
+                _light attachTo [_charge, [0, 0, 0.15]];
+                _light setLightColor [1.0, 0.45, 0.05];
+                _light setLightAmbient [0.25, 0.1, 0.02];
+                _light setLightBrightness 0.15;
+                _light setLightAttenuation [0.5, 1, 0, 0.5, 1, 5];
+                _light setLightDayLight true;
+                _light setLightUseFlare true;
+                _light setLightFlareSize 0.25;
+                _light setLightFlareMaxDistance 60;
+
+                private _elapsed = 0;
+                while { _elapsed < 25 && !isNull _radio && !isNull _charge } do {
+                    sleep 1;
+                    _elapsed = _elapsed + 1;
+                };
+
+                private _steps = [
+                    [4, 1.5, 1.0],
+                    [5, 0.8, 1.1],
+                    [6, 0.5, 1.2],
+                    [6, 0.22, 1.35],
+                    [7, 0.10, 1.5]
+                ];
+
+                {
+                    _x params ["_count", "_interval", "_pitch"];
+                    for "_i" from 1 to _count do {
+                        if (isNull _radio || isNull _charge) exitWith {};
+
+                        if (!isNull _light) then {
+                            _light setLightBrightness 0.5;
+                            _light setLightFlareSize 0.5;
+                        };
+                        playSound3D ["A3\Sounds_F\sfx\beep_target.wss", _charge, false, getPosASL _charge, 2.8, _pitch, 60];
+
+                        sleep 0.06;
+                        if (!isNull _light) then {
+                            _light setLightBrightness 0.15;
+                            _light setLightFlareSize 0.25;
+                        };
+                        sleep ((_interval - 0.06) max 0.01);
+                    };
+                    if (isNull _radio || isNull _charge) exitWith {};
+                } forEach _steps;
+
+                if (!isNull _light) then { deleteVehicle _light; };
+                if (!isNull _charge) then { deleteVehicle _charge; };
+
+                private _pos = getPosATL _radio;
+                "Bo_GBU12_LGB" createVehicle _pos;
+
+                if (!isNull _radio) then { deleteVehicle _radio; };
+
+                [_taskChildId, "SUCCEEDED", true] call BIS_fnc_taskSetState;
+
+                private _destroyed = (missionNamespace getVariable ["LL_TaskD_Trans_Destroyed", 0]) + 1;
+                missionNamespace setVariable ["LL_TaskD_Trans_Destroyed", _destroyed, true];
+                private _total = missionNamespace getVariable ["LL_TaskD_Trans_Total", 1];
+
+                if (_destroyed >= _total) then {
+                    ["task_d_transmission", "SUCCEEDED", true] call BIS_fnc_taskSetState;
+                    missionNamespace setVariable ["LL_g_taskInProgress", false, true];
+
+                    private _allUnits = missionNamespace getVariable ["LL_TaskD_Trans_AllUnits", []];
+                    private _guards = _allUnits select { alive _x };
+                    if (count _guards > 0) then {
+                        [_guards] spawn LL_fnc_taskCleanup;
+                    };
+                } else {
+                    if (["task_d_transmission_radio_1"] call BIS_fnc_taskExists) then {
+                        ["task_d_transmission_radio_1", true] call BIS_fnc_taskSetCurrent;
+                    };
+                };
+            };
+        },
+        [_radio, _taskChildId],
+        10, true, true, "", "_this distance _target < 4", 4
+    ];
+};

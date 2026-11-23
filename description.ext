@@ -1,0 +1,322 @@
+class Header
+{
+    gameType = Coop;
+    minPlayers = 1;
+    maxPlayers = 6;
+};
+
+briefingName = "MISSION LÉGION ÉTRANGÈRE";
+onLoadName = "MISSION LÉGION ÉTRANGÈRE";
+onLoadMission = "Tanoa — Opérations de la Légion Étrangère";
+author = "Friart Script";
+loadScreen = "loadScreen.jpg";
+overviewPicture = "overviewPicture.jpg";
+overviewText = "Tanoa — Opérations de la Légion Étrangère. Sécurisation de l'archipel et neutralisation des menaces.";
+disabledAI = 0;
+
+respawn = 3;
+respawnDelay = 999999;
+respawnDialog = 0;
+respawnOnStart = -1;
+respawnTemplates[] = {"Revive", "Spectator"};
+
+ReviveMode = 1;
+ReviveUnconsciousStateMode = 0;
+ReviveRequiredTrait = 0;
+ReviveRequiredItems = 0;
+ReviveRequiredItemsFakConsumed = 0;
+ReviveDelay = 10;
+ReviveMedicSpeedMultiplier = 2;
+ReviveBleedOutDelay = 180;
+ReviveForceRespawnDelay = 5;
+
+corpseManagerMode = 1;
+corpseLimit = 15;
+corpseRemovalMinTime = 120;
+corpseRemovalMaxTime = 300;
+
+wreckManagerMode = 1;
+wreckLimit = 5;
+wreckRemovalMinTime = 180;
+wreckRemovalMaxTime = 420;
+
+minPlayerDistance = 50;
+
+#include "Dialogs\base_controls.hpp"
+#include "CfgSounds.hpp"
+
+class CfgFunctions
+{
+    class LL
+    {
+        tag = "LL";
+
+        class Briefing
+        {
+            file = "Functions\Briefing";
+            class initBriefing {};
+            class initContext {};
+        };
+
+        class Civilian
+        {
+            file = "Functions\Civilian";
+            class ambientAnimal {};
+            class ambientCivilians {};
+            class applyTakistaniIdentity {};
+            class initTakistaniDB {};
+            class rebelAmbush {};
+            class secureOpforLanguage {};
+            class spawnPresence {};
+        };
+
+        class Drone
+        {
+            file = "Functions\Drone";
+            class droneDispatch {};
+            class droneManager {};
+        };
+
+        class Environment
+        {
+            file = "Functions\Environment";
+            class doorSecurity {};
+            class initSkills {};
+            class preventWater {};
+            class randomWeather {};
+        };
+
+        class Helicopter
+        {
+            file = "Functions\Helicopter";
+            class addResupplyAction {};
+            class heliDispatch {};
+            class heliManager {};
+            class initSupport {};
+            class nearestPlayerLZ {};
+        };
+
+        class Medical
+        {
+            file = "Functions\Medical";
+            class aiHealSelf {};
+        };
+
+        class Player
+        {
+            file = "Functions\Player";
+            class addHealAction {};
+            class applyIdentity {};
+            class applyLoadout {};
+            class initIdentity {};
+            class initLoadout {};
+            class initLocal {};
+        };
+
+        class Task
+        {
+            file = "Functions\Task";
+            class addTaskAction {};
+            class extraction {};
+            class extraction_secure {};
+            class initVehicleLoadout {};
+            class intro_01 {};
+            class intro_02 {};
+            class intro_02_new {};
+            class prepareMissionSites {};
+            class saveProgress {};
+            class selectOperation {};
+            class spawnStartArsenal {};
+            class startOperation {};
+            class subtitles_legion {};
+            class taskA {};
+            class taskB {};
+            class taskBonus {};
+            class taskC {};
+            class taskCleanup {};
+            class taskD_captive {};
+            class taskD_chemical {};
+            class taskD_chemical_01 {};
+            class taskD_chemical_02 {};
+            class taskD_chemical_03 {};
+            class taskD_documents {};
+            class taskD_hvt {};
+            class taskD_tigris {};
+            class taskD_transmission {};
+            class taskManager {};
+            class task_generator {};
+        };
+
+        class Team
+        {
+            file = "Functions\Team";
+            class addRoeActions {};
+            class applyIdentityBroadcast {};
+            class applyRoE {};
+            class badgeManager {};
+            class identityManager {};
+            class randomizeLoadout {};
+            class reloadWeapons {};
+            class switchToAI {};
+        };
+
+        class UI
+        {
+            file = "Functions\UI";
+            class radioMessage {};
+        };
+    };
+};
+
+class CfgCommunicationMenu
+{
+    class Support_Ammo
+    {
+        text = "$STR_LL_Support_Ammo";
+        submenu = "";
+        expression = "['LIVRAISON', _pos, _caller, 2] call LL_fnc_heliDispatch;";
+        icon = "\a3\Ui_f\data\GUI\Cfg\CommunicationMenu\supplydrop_ca.paa";
+        cursor = "\a3\Ui_f\data\IGUI\Cfg\Cursors\iconCursorSupport_ca.paa";
+        enable = "1";
+        removeAfterExpressionCall = 0;
+    };
+    class Support_Vehicle
+    {
+        text = "$STR_LL_Support_Vehicle";
+        submenu = "";
+        expression = "['VEHICULE', _pos, _caller, 2] call LL_fnc_heliDispatch;";
+        icon = "\a3\ui_f\data\igui\cfg\simpletasks\types\car_ca.paa";
+        cursor = "\a3\Ui_f\data\IGUI\Cfg\Cursors\iconCursorSupport_ca.paa";
+        enable = "1";
+        removeAfterExpressionCall = 0;
+    };
+    class Support_Extract
+    {
+        text = "$STR_LL_Support_Extract";
+        submenu = "";
+        expression = "['EMBARQUEMENT', _pos, _caller, 3] call LL_fnc_heliDispatch;";
+        icon = "\a3\ui_f\data\igui\cfg\simpletasks\types\getin_ca.paa";
+        cursor = "\a3\Ui_f\data\IGUI\Cfg\Cursors\iconCursorSupport_ca.paa";
+        enable = "1";
+        removeAfterExpressionCall = 0;
+    };
+    class Support_CAS
+    {
+        text = "$STR_LL_Support_CAS";
+        submenu = "";
+        expression = "['CAS', _pos, _caller, 4] call LL_fnc_heliDispatch;";
+        icon = "\a3\Ui_f\data\GUI\Cfg\CommunicationMenu\casheli_ca.paa";
+        cursor = "\a3\Ui_f\data\IGUI\Cfg\Cursors\iconCursorSupport_ca.paa";
+        enable = "1";
+        removeAfterExpressionCall = 0;
+    };
+    class Support_Drone
+    {
+        text = "$STR_Drone_Surveillance";
+        submenu = "";
+        expression = "['SURVEILLANCE', _pos, _caller] call LL_fnc_droneDispatch;";
+        icon = "\a3\ui_f\data\igui\cfg\simpletasks\types\radio_ca.paa";
+        cursor = "\a3\Ui_f\data\IGUI\Cfg\Cursors\iconCursorSupport_ca.paa";
+        enable = "1";
+        removeAfterExpressionCall = 0;
+    };
+};
+
+class CfgMusic
+{
+    tracks[] = {};
+
+    class Legion_001
+    {
+        name = "Legion 001 - Marche";
+        sound[] = {"Music\legion_001.ogg", db+3, 1.0};
+        titles[] = {0, ""};
+    };
+
+    class Legion_002
+    {
+        name = "Legion 002 - Extraction";
+        sound[] = {"Music\legion_002.ogg", db+3, 1.0};
+        titles[] = {0, ""};
+    };
+
+    class Music_Intro: Legion_001 {};
+    class Music_Legion_01: Legion_001 {};
+    class Music_Track_01: Legion_001 {};
+    class Music_Rubab_01: Legion_001 {};
+    class Rubab_01: Legion_001 {};
+    class Music_Rubab_02: Legion_002 {};
+    class Rubab_02: Legion_002 {};
+    class Music_Rubab_Full: Legion_002 {};
+    class Rubab_Full: Legion_002 {};
+};
+
+class CfgUnitInsignia
+{
+    class Legion_Badge
+    {
+        displayName = "Légion Étrangère";
+        author = "Friart Script";
+        texture = "Images\001.png";
+        textureVehicle = "";
+    };
+};
+
+class RscTitles
+{
+    class LL_Legion_Subtitles
+    {
+        idd = -1;
+        movingEnable = 0;
+        duration = 10000;
+        fadein = 0;
+        fadeout = 0;
+        name = "LL_Legion_Subtitles";
+        onLoad = "uiNamespace setVariable ['LL_disp_subtitles', _this select 0];";
+        onUnload = "uiNamespace setVariable ['LL_disp_subtitles', displayNull];";
+        class controls
+        {
+            class SubtitleText: RscStructuredText
+            {
+                idc = 8888;
+                x = "safezoneX";
+                y = "safezoneY + safezoneH - 0.15";
+                w = "safezoneW";
+                h = "0.14";
+                colorBackground[] = {0, 0, 0, 0};
+                size = "(((((safezoneW / safezoneH) min 1.2) / 1.2) / 25) * 1.15)";
+                class Attributes
+                {
+                    font = "PuristaMedium";
+                    color = "#ffffff";
+                    align = "center";
+                    shadow = 2;
+                };
+            };
+        };
+    };
+};
+
+class CfgDebriefing
+{
+    class End1
+    {
+        title = "$STR_LL_Debrief_Win_Title";
+        subtitle = "$STR_LL_Debrief_Win_Sub";
+        description = "$STR_LL_Debrief_Win_Desc";
+        pictureBackground = "Images\001.jpg";
+        picture = "Images\001.png";
+        pictureColor[] = {1, 1, 1, 1};
+    };
+    class End2
+    {
+        title = "$STR_LL_Debrief_Fail_Title";
+        subtitle = "$STR_LL_Debrief_Fail_Sub";
+        description = "$STR_LL_Debrief_Fail_Desc";
+        pictureBackground = "Images\001.jpg";
+        picture = "Images\001.png";
+        pictureColor[] = {1, 0.3, 0.3, 1};
+    };
+    class MissionSuccess: End1 {};
+    class LOSER: End2 {};
+};

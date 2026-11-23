@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Keys>
+<Key ID="STR_Drone_Approach">
+            <Original>MQ-12 Falcon en approche. Surveillance active pendant 5 minutes.</Original>
+            <English>MQ-12 Falcon on approach. Active surveillance for 5 minutes.</English>
+            <French>MQ-12 Falcon en approche. Surveillance active pendant 5 minutes.</French>
+            <Spanish>MQ-12 Falcon aproximándose. Vigilancia activa por 5 minutos.</Spanish>
+            <Italian>MQ-12 Falcon in avvicinamento. Sorveglianza attiva per 5 minuti.</Italian>
+            <German>MQ-12 Falcon im Anflug. Aktive Überwachung für 5 Minuten.</German>
+            <Polish>MQ-12 Falcon zbliża się. Aktywna obserwacja przez 5 minut.</Polish>
+            <Russian>MQ-12 Falcon на подходе. Активное наблюдение на 5 минут.</Russian>
+            <Turkish>MQ-12 Falcon yaklaşıyor. 5 dakika boyunca aktif gözetleme.</Turkish>
+            <Japanese>MQ-12 Falconが接近中。5分間の監視を開始します。</Japanese>
+            <Korean>MQ-12 Falcon 접근 중. 5분 동안 감시 활성화.</Korean>
+            <Chinese>MQ-12 Falcon正在接近。将进行5分钟的监视。</Chinese>
+        </Key>
+</Keys>

@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Keys>
+    <Key ID="STR_LL_Intro_Author">
+        <Original>MISSION LÉGION ÉTRANGÈRE</Original>
+        <English>MISSION FRENCH FOREIGN LEGION</English>
+        <French>MISSION LÉGION ÉTRANGÈRE</French>
+        <Spanish>MISIÓN LEGIÓN EXTRANJERA</Spanish>
+        <German>MISSION FREMDENLEGION</German>
+        <Italian>MISSIONE LEGIONE STRANIERA</Italian>
+        <Polish>MISJA LEGIA CUDZOZIEMSKA</Polish>
+        <Portuguese>MISSÃO LEGIÃO ESTRANGEIRA</Portuguese>
+        <Russian>МИССИЯ ИНОСТРАННЫЙ ЛЕГИОН</Russian>
+        <Czech>MISE CIZINECKÁ LEGIE</Czech>
+        <Korean>프랑스 외인부대 작전</Korean>
+        <Japanese>フランス外人部隊ミッション</Japanese>
+        <Chinese>法國外籍兵團任務</Chinese>
+        <Chinesesimp>法国外籍兵团任务</Chinesesimp>
+        <Turkish>FRANSIZ YABANCI LEJYONU GÖREVİ</Turkish>
+    </Key>
+    <Key ID="STR_LL_Intro_Presents">
+        <Original>Immersion, actions and dynamic objectives</Original>
+        <English>Immersion, actions and dynamic objectives</English>
+        <French>Immersion, actions et objectifs dynamiques</French>
+        <Spanish>Inmersión, acciones y objetivos dinámicos</Spanish>
+        <German>Immersion, Aktionen und dynamische Ziele</German>
+        <Italian>Immersione, azioni e obiettivi dinamici</Italian>
+        <Polish>Imersja, działania i dynamiczne cele</Polish>
+        <Portuguese>Imersão, ações e objetivos dinâmicos</Portuguese>
+        <Russian>Погружение, действия и динамические цели</Russian>
+        <Czech>Infiltrace, akce a dynamické cíle</Czech>
+        <Korean>몰입감, 작전 및 역동적인 목표</Korean>
+        <Japanese>没入感、アクション、そしてダイナミックな目標</Japanese>
+        <Chinese>沉浸感、行動與動態目標</Chinese>
+        <Chinesesimp>沉浸感、行动与动态目标</Chinesesimp>
+        <Turkish>Sürükleyicilik, eylemler ve dinamik hedefler</Turkish>
+    </Key>
+    <Key ID="STR_LL_Intro_CreatedBy">
+        <Original>This mod was created by Friart Script (@friartscript)</Original>
+        <English>This mod was created by Friart Script (@friartscript)</English>
+        <French>Ce mod est réalisé par Friart Script (@friartscript)</French>
+        <Spanish>Este mod fue creado por Friart Script (@friartscript)</Spanish>
+        <German>Dieser Mod wurde erstellt von Friart Script (@friartscript)</German>
+        <Italian>Questa mod è stata creata da Friart Script (@friartscript)</Italian>
+        <Polish>Ten mod został stworzony przez Friart Script (@friartscript)</Polish>
+        <Portuguese>Este mod foi criado por Friart Script (@friartscript)</Portuguese>
+        <Russian>Этот мод создан Friart Script (@friartscript)</Russian>
+        <Czech>Tento mód vytvořil Friart Script (@friartscript)</Czech>
+        <Korean>이 모드는 Friart Script (@friartscript)에 의해 제작되었습니다</Korean>
+        <Japanese>このMODは Friart Script (@friartscript) によって作成されました</Japanese>
+        <Chinese>此模組由 Friart Script (@friartscript) 製作</Chinese>
+        <Chinesesimp>此模组由 Friart Script (@friartscript) 制作</Chinesesimp>
+        <Turkish>Bu mod Friart Script (@friartscript) tarafından yapılmıştır</Turkish>
+    </Key>
+    <Key ID="STR_LL_Intro_Faction">
+        <Original>LÉGION ÉTRANGÈRE</Original>
+        <English>FRENCH FOREIGN LEGION</English>
+        <French>LÉGION ÉTRANGÈRE</French>
+        <Spanish>LEGIÓN EXTRANJERA</Spanish>
+        <German>FRANZÖSISCHE FREMDENLEGION</German>
+        <Italian>LEGIONE STRANIERA</Italian>
+        <Polish>FRANCUSKA LEGIA CUDZOZIEMSKA</Polish>
+        <Portuguese>LEGIÃO ESTRANGEIRA FRANCESA</Portuguese>
+        <Russian>ФРАНЦУЗСКИЙ ИНОСТРАННЫЙ ЛЕГИОН</Russian>
+        <Czech>FRANCOUZSKÁ CIZINECKÁ LEGIE</Czech>
+        <Korean>프랑스 외인부대</Korean>
+        <Japanese>フランス外人部隊</Japanese>
+        <Chinese>法國外籍兵團</Chinese>
+        <Chinesesimp>法国外籍兵团</Chinesesimp>
+        <Turkish>FRANSIZ YABANCI LEJYONU</Turkish>
+    </Key>
+    <Key ID="STR_LL_Intro_Location">
+        <Original>March 13, 2019</Original>
+        <English>March 13, 2019</English>
+        <French>13 Mars 2019</French>
+        <Spanish>13 de Marzo de 2019</Spanish>
+        <German>13. März 2019</German>
+        <Italian>13 Marzo 2019</Italian>
+        <Polish>13 Marca 2019</Polish>
+        <Portuguese>13 de Março de 2019</Portuguese>
+        <Russian>13 марта 2019 г.</Russian>
+        <Czech>13. března 2019</Czech>
+        <Korean>2019년 3월 13일</Korean>
+        <Japanese>2019年3月13日</Japanese>
+        <Chinese>2019年3月13日</Chinese>
+        <Chinesesimp>2019年3月13日</Chinesesimp>
+        <Turkish>13 Mart 2019</Turkish>
+    </Key>
+    <Key ID="STR_LL_Intro_MissionStartSubtitle">
+        <Original>Review the operational briefing if you value your life.</Original>
+        <English>Review the operational briefing if you value your life.</English>
+        <French>Consultez le briefing opérationnel si vous tenez à votre peau.</French>
+        <Spanish>Consulte el informe operativo si valora su vida.</Spanish>
+        <German>Missionsbriefing lesen, wenn Sie am Leben bleiben wollen.</German>
+        <Italian>Consulta il briefing operativo se tieni alla pelle.</Italian>
+        <Polish>Zapoznaj się z odprawą operacyjną, jeśli zależy ci na życiu.</Polish>
+        <Portuguese>Consulte o briefing operacional se dá valor à sua vida.</Portuguese>
+        <Russian>Ознакомьтесь с оперативным брифингом, если хотите остаться в живых.</Russian>
+        <Czech>Seznamte se s operačním brífinkem, pokud si vážíte svého života.</Czech>
+        <Korean>살고 싶다면 작전 브리핑을 정독하십시오.</Korean>
+        <Japanese>命が惜しければ作戦説明を確認せよ。</Japanese>
+        <Chinese>如果想活命，請仔細閱讀作戰簡報。</Chinese>
+        <Chinesesimp>如果想活命，请仔细阅读作战简报。</Chinesesimp>
+        <Turkish>Hayatta kalmak istiyorsanız operasyonel brifingi inceleyin.</Turkish>
+    </Key>
+</Keys>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Keys>
+    <Key ID="STR_LL_Progress_Saved">
+        <Original>Progress saved</Original>
+        <English>Progress saved</English>
+        <French>Progression sauvegardée</French>
+        <Spanish>Progreso guardado</Spanish>
+        <German>Fortschritt gespeichert</German>
+        <Italian>Progresso salvato</Italian>
+        <Polish>Postęp zapisany</Polish>
+        <Portuguese>Progresso guardado</Portuguese>
+        <Russian>Прогресс сохранен</Russian>
+        <Czech>Postup uložen</Czech>
+        <Korean>진행 상황 저장됨</Korean>
+        <Japanese>進行状況が保存されました</Japanese>
+        <Chinese>進度已儲存</Chinese>
+        <Chinesesimp>进度已保存</Chinesesimp>
+        <Turkish>İlerleme kaydedildi</Turkish>
+    </Key>
+</Keys>

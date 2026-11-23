@@ -1,0 +1,41 @@
+params [
+    ["_stringKey", "", [""]],
+    ["_formatArgs", [], [[]]],
+    ["_duration", 6, [0]], 
+    ["_playAudio", true, [true]],
+    ["_speaker", "", [""]]
+];
+
+if (!hasInterface) exitWith {};
+if (_stringKey isEqualTo "") exitWith {};
+
+if (_playAudio && { isClass (missionConfigFile >> "CfgSounds" >> _stringKey) || isClass (configFile >> "CfgSounds" >> _stringKey) }) then {
+    playSound _stringKey;
+};
+
+private _localizedText = localize _stringKey;
+if (_localizedText isEqualTo "") then {
+    if (_stringKey isEqualTo "STR_Drone_Jammed") then {
+        _localizedText = "Brouillage radio détecté. Impossible de contacter le drone.";
+    } else {
+        _localizedText = _stringKey;
+    };
+};
+
+if (count _formatArgs > 0) then {
+    _localizedText = format ([_localizedText] + _formatArgs);
+};
+
+if (_speaker isEqualTo "") then {
+    if (_stringKey find "STR_Drone_" == 0) then {
+        _speaker = "Opérateur Drone";
+    } else {
+        if (_stringKey find "STR_LL_Heli_" == 0) then {
+            _speaker = "Appui Aérien";
+        } else {
+            _speaker = "QG";
+        };
+    };
+};
+
+[_speaker, _localizedText] spawn BIS_fnc_showSubtitle;

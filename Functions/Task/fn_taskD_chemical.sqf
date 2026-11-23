@@ -1,0 +1,896 @@
+params [
+    ["_locMarker", "", [""]]
+];
+
+if (_locMarker == "" || _locMarker == "init" || !(_locMarker in allMapMarkers)) exitWith { missionNamespace setVariable ["LL_g_taskInProgress", false, true]; false };
+
+private _fnc_chemical_effects = {
+    params [
+        ["_truck", objNull, [objNull]]
+    ];
+
+    if (isNull _truck || !alive _truck) exitWith {};
+
+    private _fnc_smokeRing = {
+        params [
+            ["_center", [0,0,0], [[]]],
+            ["_maxRadius", 40, [0]],
+            ["_duration", 3, [0]],
+            ["_color", [0.8, 0.8, 0.8, 1], [[]]]
+        ];
+
+        private _source = createVehicleLocal ["#particlesource", _center];
+        _source setParticleCircle [0.1, [2, 2, 0.1]];
+        _source setParticleRandom [0.3, [0.2, 0.2, 0.1], [0.3, 0.3, 0.1], 0, 0.3, [0,0,0,0.05], 0, 0];
+        _source setParticleParams [
+            ["\A3\data_f\ParticleEffects\Universal\Universal", 16, 7, 48, 1], "", "Billboard",
+            1, 2.5, [0,0,0], [0,0,0], 0, 1.275, 1, 0.2,
+            [1.5, 6, 10],
+            [
+                [_color select 0, _color select 1, _color select 2, (_color select 3) * 0.8],
+                [_color select 0, _color select 1, _color select 2, (_color select 3) * 0.4],
+                [_color select 0, _color select 1, _color select 2, 0]
+            ],
+            [0.5], 0.1, 0, "", "", _source
+        ];
+        _source setDropInterval 0.01;
+
+        private _startTime = time;
+        private _radius = 0.1;
+        while { _radius < _maxRadius && (time - _startTime) < _duration } do {
+            private _progress = (time - _startTime) / _duration;
+            _radius = 0.1 + (_maxRadius - 0.1) * _progress;
+            _source setParticleCircle [_radius, [2 * (1 - _progress), 2 * (1 - _progress), 0.1]];
+            sleep 0.03;
+        };
+        deleteVehicle _source;
+    };
+
+    _truck addEventHandler ["HandleDamage", {
+        params ["_unit", "_selection", "_damage", "_source", "_projectile"];
+        if (!alive _unit) exitWith { 0 };
+        if (_unit getVariable ["LL_TaskDChemical_IsExploding", false]) exitWith { _damage };
+
+        private _oldDmg = if (_selection != "") then { _unit getHit _selection } else { damage _unit };
+        if (isNil "_oldDmg") then { _oldDmg = 0; };
+
+        private _delta = (_damage - _oldDmg) max 0;
+
+        if (_projectile != "" && _selection == "" && _delta < 0.008) then {
+            _delta = 0.008;
+        };
+
+        if (_delta > 0) then {
+            private _clampedDelta = _delta min 0.15;
+            private _cumul = (_unit getVariable ["LL_Truck_AccumDamage", 0]) + (_clampedDelta * 2.5);
+            _unit setVariable ["LL_Truck_AccumDamage", _cumul];
+
+            if (_cumul >= 0.05 && { (_unit getVariable ["LL_Toxic_Level", 0]) < 1 }) then {
+                _unit setVariable ["LL_Toxic_Level", 1];
+
+                [_unit] spawn {
+                    params ["_truck"];
+                    private _emitter = "#particlesource" createVehicleLocal (getPos _truck);
+                    _emitter attachTo [_truck, [0, -1.5, 0.5]];
+                    _emitter setParticleCircle [0.2, [0.2, 0.2, 0.1]];
+                    _emitter setParticleRandom [0.5, [0.3, 0.3, 0.2], [0.3, 0.3, 0.2], 0, 0.2, [0, 0, 0, 0.05], 0, 0];
+                    _emitter setParticleParams [
+                        ["\A3\data_f\ParticleEffects\Universal\Universal", 16, 7, 48, 1], "", "Billboard", 1, 6,
+                        [0, 0, 0], [0, 0, 0.8], 0, 1.28, 1, 0.05, [0.8, 2.5, 4.5],
+                        [[0.9, 0.85, 0.1, 0.5], [0.8, 0.75, 0.08, 0.25], [0.6, 0.55, 0.05, 0]], [0.125], 1, 0, "", "", _truck
+                    ];
+                    _emitter setDropInterval 0.03;
+
+                    while { alive _truck && !isNull _emitter } do {
+                        private _lvl = _truck getVariable ["LL_Toxic_Level", 1];
+                        if (_lvl >= 2) then {
+                            _emitter setDropInterval 0.015;
+                            _emitter setParticleParams [
+                                ["\A3\data_f\ParticleEffects\Universal\Universal", 16, 7, 48, 1], "", "Billboard", 1, 7,
+                                [0, 0, 0], [0, 0, 1.2], 0, 1.28, 1, 0.05, [1.5, 4.0, 7.0],
+                                [[0.92, 0.88, 0.1, 0.7], [0.82, 0.75, 0.08, 0.45], [0.6, 0.55, 0.05, 0]], [0.125], 1, 0, "", "", _truck
+                            ];
+                        };
+                        sleep 1;
+                    };
+                    deleteVehicle _emitter;
+                };
+
+                [_unit] spawn {
+                    params ["_truck"];
+                    while { alive _truck } do {
+                        private _lvl = _truck getVariable ["LL_Toxic_Level", 0];
+                        if (_lvl >= 1) then {
+                            private _radius = if (_lvl >= 2) then { 14 } else { 8 };
+                            private _dmg = if (_lvl >= 2) then { 0.03 } else { 0.015 };
+                            {
+                                if (alive _x && _x distance2D _truck < _radius) then {
+                                    _x setDamage ((damage _x) + _dmg);
+                                    if (isPlayer _x) then {
+                                        _x setFatigue 1;
+                                        addCamShake [2, 1, 15];
+                                    };
+                                };
+                            } forEach allUnits;
+                        };
+                        sleep 1;
+                    };
+                };
+            };
+
+            if (_cumul >= 0.25 && { (_unit getVariable ["LL_Toxic_Level", 0]) < 2 }) then {
+                _unit setVariable ["LL_Toxic_Level", 2];
+            };
+
+            if (_cumul >= 0.65) then {
+                _unit setVariable ["LL_TaskDChemical_IsExploding", true];
+                _unit setDamage 1;
+            };
+        };
+
+        if (_damage >= 0.89) then { _damage = 0.89; };
+        _damage
+    }];
+
+    _truck setHitPointDamage ["HitEngine", 1];
+
+    _truck addEventHandler ["Killed", {
+        params ["_unit"];
+
+        private _subTask = _unit getVariable ["LL_TaskDChemical_SubTask", ""];
+        if (_subTask != "") then {
+            [_subTask, "FAILED", true] call BIS_fnc_taskSetState;
+        };
+
+        if (!(missionNamespace getVariable ["LL_TaskDChemical_Failed", false])) then {
+            missionNamespace setVariable ["LL_TaskDChemical_Failed", true];
+            ["task_chemical", "FAILED", true] call BIS_fnc_taskSetState;
+            missionNamespace setVariable ["LL_g_taskInProgress", false, true];
+        };
+
+        private _posATL = getPosATL _unit;
+        private _posASL = getPosASL _unit;
+
+        "HelicopterExploBig" createVehicle _posATL;
+
+        private _fnc_ring = {
+            params ["_center", "_maxRadius", "_duration", "_color"];
+            private _source = createVehicleLocal ["#particlesource", _center];
+            _source setParticleCircle [0.1, [2, 2, 0.1]];
+            _source setParticleRandom [0.3, [0.2, 0.2, 0.1], [0.3, 0.3, 0.1], 0, 0.3, [0,0,0,0.05], 0, 0];
+            _source setParticleParams [
+                ["\A3\data_f\ParticleEffects\Universal\Universal", 16, 7, 48, 1], "", "Billboard",
+                1, 2.5, [0,0,0], [0,0,0], 0, 1.275, 1, 0.2,
+                [1.5, 6, 10],
+                [
+                    [_color select 0, _color select 1, _color select 2, (_color select 3) * 0.8],
+                    [_color select 0, _color select 1, _color select 2, (_color select 3) * 0.4],
+                    [_color select 0, _color select 1, _color select 2, 0]
+                ],
+                [0.5], 0.1, 0, "", "", _source
+            ];
+            _source setDropInterval 0.01;
+            private _startTime = time;
+            private _radius = 0.1;
+            while { _radius < _maxRadius && (time - _startTime) < _duration } do {
+                private _progress = (time - _startTime) / _duration;
+                _radius = 0.1 + (_maxRadius - 0.1) * _progress;
+                _source setParticleCircle [_radius, [2 * (1 - _progress), 2 * (1 - _progress), 0.1]];
+                sleep 0.03;
+            };
+            deleteVehicle _source;
+        };
+        [_posATL, 110, 8, [0.9, 0.85, 0.1, 0.85]] spawn _fnc_ring;
+
+        [_posATL, _posASL] spawn {
+            params ["_posATL", "_posASL"];
+            private _maxRadius = 110;
+            private _duration = 8;
+            private _startTime = time;
+            private _damagedUnits = [];
+
+            while { (time - _startTime) < _duration } do {
+                private _progress = (time - _startTime) / _duration;
+                private _currentRadius = _maxRadius * _progress;
+                {
+                    if (alive _x && !(_x in _damagedUnits)) then {
+                        private _dist = _x distance _posATL;
+                        if (_dist <= _currentRadius) then {
+                            _damagedUnits pushBack _x;
+                            if (_dist <= 30) then {
+                                _x setDamage 1;
+                            } else {
+                                if (_dist <= 80) then {
+                                    private _dmg = 0.5 + ((80 - _dist) / 50) * 0.4;
+                                    _x setDamage ((damage _x) + _dmg);
+                                    if (_x isKindOf "Man") then {
+                                        private _dir = _posASL vectorFromTo (getPosASL _x);
+                                        _dir set [2, 0.4];
+                                        private _vel = velocity _x;
+                                        _x setVelocity (_vel vectorAdd (_dir vectorMultiply 15));
+                                    };
+                                } else {
+                                    if (_dist <= 110) then {
+                                        private _dmg = 0.1 + ((110 - _dist) / 30) * 0.2;
+                                        _x setDamage ((damage _x) + _dmg);
+                                    };
+                                };
+                            };
+                        };
+                    };
+                } forEach (allUnits select { alive _x });
+                sleep 0.05;
+            };
+        };
+
+        private _allUnits = missionNamespace getVariable ["LL_TaskDChemical_AllUnits", []];
+        private _guards = _allUnits select { alive _x && _x isKindOf "Man" };
+        [_guards] spawn LL_fnc_taskCleanup;
+    }];
+};
+
+private _fnc_chemical_extract = {
+    params [
+        ["_cargo", objNull, [objNull]],
+        ["_dropPos", nil]
+    ];
+
+    if (isNull _cargo || !alive _cargo) exitWith {};
+
+    private _playerPos = if (!isNull player && { alive player }) then { getPosATL player } else { getPosATL _cargo };
+    private _spawnDir = random 360;
+    private _spawnPosHeli = _playerPos getPos [1500, _spawnDir];
+
+    if (_spawnPosHeli select 0 < 50 || { _spawnPosHeli select 0 > (worldSize - 50) || { _spawnPosHeli select 1 < 50 || { _spawnPosHeli select 1 > (worldSize - 50) } } }) then {
+        _spawnPosHeli = [50, 50, 250];
+    } else {
+        _spawnPosHeli set [2, 250];
+    };
+
+    if (isNil "_dropPos") then {
+        private _exitDir = (_spawnDir + 150 + random 60) % 360;
+        _dropPos = _playerPos getPos [2500, _exitDir];
+        if (_dropPos select 0 < 50 || { _dropPos select 0 > (worldSize - 50) || { _dropPos select 1 < 50 || { _dropPos select 1 > (worldSize - 50) } } }) then {
+            _dropPos = [worldSize - 50, worldSize - 50, 150];
+        } else {
+            _dropPos set [2, 150];
+        };
+    };
+
+    private _heli = createVehicle ["B_Heli_Transport_03_F", _spawnPosHeli, [], 0, "FLY"];
+    _heli setPosATL _spawnPosHeli;
+    createVehicleCrew _heli;
+
+    private _grp = group driver _heli;
+    private _crew = crew _heli;
+    private _pilot = driver _heli;
+    private _gunners = _crew select { _x != _pilot };
+    private _ropes = [];
+
+    private _fnc_heliAbort = {
+        params ["_heli", "_grp", "_crew", "_pilot", "_dropPos", ["_ropes", []]];
+        if (!alive _heli) exitWith {
+            { deleteVehicle _x; } forEach _crew;
+            deleteVehicle _heli;
+            if (!isNull _grp) then { deleteGroup _grp; };
+        };
+
+        { if (!isNull _x) then { ropeDestroy _x; }; } forEach _ropes;
+
+        _pilot enableAI "MOVE";
+        _pilot enableAI "PATH";
+        _heli flyInHeight 160;
+        _heli limitSpeed 160;
+
+        _grp setBehaviour "AWARE";
+        _grp setCombatMode "BLUE";
+
+        {
+            _x disableAI "FSM";
+            _x disableAI "TARGET";
+            _x disableAI "AUTOTARGET";
+            _x disableAI "AUTOCOMBAT";
+            _x disableAI "COVER";
+            _x setBehaviour "AWARE";
+            _x setCombatMode "BLUE";
+        } forEach _crew;
+
+        _pilot setBehaviour "AWARE";
+        _pilot setCombatMode "BLUE";
+
+        private _v = velocity _heli;
+        _heli setVelocity [_v select 0, _v select 1, ((_v select 2) max 5)];
+
+        while { count (waypoints _grp) > 0 } do { deleteWaypoint [_grp, 0]; };
+        private _wpEnd = _grp addWaypoint [_dropPos, 0];
+        _wpEnd setWaypointType "MOVE";
+        _wpEnd setWaypointSpeed "FULL";
+        _wpEnd setWaypointBehaviour "AWARE";
+        _heli doMove _dropPos;
+
+        waitUntil {
+            sleep 1;
+            if (!alive _heli) exitWith { true };
+
+            private _curAlt = (getPosATL _heli) select 2;
+            if (_curAlt < 70) then {
+                private _vel = velocity _heli;
+                _heli setVelocity [_vel select 0, _vel select 1, ((_vel select 2) max 4)];
+                _heli flyInHeight 160;
+            };
+
+            private _players = allPlayers select { alive _x };
+            ({ _x distance2D _heli < 1500 } count _players) == 0 || (_heli distance2D _dropPos < 300)
+        };
+
+        { deleteVehicle _x; } forEach (crew _heli);
+        deleteVehicle _heli;
+        if (!isNull _grp) then { deleteGroup _grp; };
+    };
+
+    { _x allowDamage false; } forEach _crew;
+    _heli allowDamage false;
+
+    _heli disableCollisionWith _cargo;
+    _cargo disableCollisionWith _heli;
+
+    _grp setBehaviour "CARELESS";
+    _grp setCombatMode "BLUE";
+
+    {
+        _x disableAI "FSM";
+        _x disableAI "TARGET";
+        _x disableAI "AUTOTARGET";
+        _x disableAI "AUTOCOMBAT";
+        _x disableAI "COVER";
+    } forEach _crew;
+
+    private _targetPos = getPosATL _cargo;
+    _heli flyInHeight 70;
+    _heli setVehicleAmmo 1;
+
+    while { count (waypoints _grp) > 0 } do { deleteWaypoint [_grp, 0]; };
+    private _wp = _grp addWaypoint [_targetPos, 0];
+    _wp setWaypointType "MOVE";
+    _wp setWaypointBehaviour "CARELESS";
+    _wp setWaypointSpeed "FULL";
+    _heli doMove _targetPos;
+
+    private _apTimer = 0;
+    waitUntil {
+        sleep 0.3;
+        _apTimer = _apTimer + 0.3;
+        (_heli distance2D _targetPos < 180) || _apTimer > 60 || !alive _heli || !alive _cargo
+    };
+
+    if (!alive _heli) exitWith {
+        { deleteVehicle _x; } forEach crew _heli;
+        deleteVehicle _heli;
+        deleteGroup _grp;
+    };
+    if (!alive _cargo) exitWith {
+        [_heli, _grp, _crew, _pilot, _dropPos, _ropes] spawn _fnc_heliAbort;
+    };
+
+    private _nearEnemies = allUnits select { side group _x == east && alive _x && (_x distance2D _targetPos < 500) };
+
+    if (count _nearEnemies > 0) then {
+        _heli flyInHeight 45;
+        _heli limitSpeed 75;
+        _heli setVehicleAmmo 1;
+
+        _grp setBehaviour "COMBAT";
+        _grp setCombatMode "RED";
+
+        {
+            _x enableAI "FSM";
+            _x enableAI "TARGET";
+            _x enableAI "AUTOTARGET";
+            _x enableAI "AUTOCOMBAT";
+            _x enableAI "WEAPONAIM";
+            _x enableAI "CHECKVISIBLE";
+            _x setBehaviour "COMBAT";
+            _x setCombatMode "RED";
+            _x setSkill ["aimingAccuracy", 1.0];
+            _x setSkill ["aimingSpeed", 1.0];
+            _x setSkill ["aimingShake", 0.01];
+            _x setSkill ["spotDistance", 1.0];
+            _x setSkill ["spotTime", 1.0];
+            _x setSkill ["courage", 1.0];
+            _x setSkill ["commanding", 1.0];
+        } forEach _gunners;
+
+        _pilot disableAI "TARGET";
+        _pilot disableAI "AUTOTARGET";
+        _pilot disableAI "AUTOCOMBAT";
+        _pilot disableAI "COVER";
+        _pilot setBehaviour "CARELESS";
+
+        while { count (waypoints _grp) > 0 } do { deleteWaypoint [_grp, 0]; };
+        private _wpCombat = _grp addWaypoint [_targetPos, 0];
+        _wpCombat setWaypointType "LOITER";
+        _wpCombat setWaypointLoiterRadius 120;
+        _wpCombat setWaypointLoiterType "CIRCLE_L";
+        _wpCombat setWaypointSpeed "LIMITED";
+
+        private _combatTimer = 0;
+        while { _combatTimer < 45 && alive _heli && alive _cargo } do {
+            private _enemies = allUnits select { side group _x == east && alive _x && (_x distance2D _targetPos < 500 || _x distance2D _heli < 500) };
+            if (count _enemies == 0) exitWith {};
+
+            _heli setVehicleAmmo 1;
+            {
+                private _e = _x;
+                _grp reveal [_e, 4];
+                _heli reveal [_e, 4];
+                {
+                    _x reveal [_e, 4];
+                    _x commandTarget _e;
+                    _heli fireAtTarget [_e];
+                } forEach _gunners;
+            } forEach _enemies;
+
+            sleep 1.5;
+            _combatTimer = _combatTimer + 1.5;
+        };
+
+        while { count (waypoints _grp) > 0 } do { deleteWaypoint [_grp, 0]; };
+    };
+
+    if (!alive _heli) exitWith {
+        { deleteVehicle _x; } forEach crew _heli;
+        deleteVehicle _heli;
+        deleteGroup _grp;
+    };
+    if (!alive _cargo) exitWith {
+        [_heli, _grp, _crew, _pilot, _dropPos, _ropes] spawn _fnc_heliAbort;
+    };
+
+    _grp setBehaviour "CARELESS";
+    _grp setCombatMode "BLUE";
+
+    {
+        _x disableAI "FSM";
+        _x disableAI "TARGET";
+        _x disableAI "AUTOTARGET";
+        _x disableAI "AUTOCOMBAT";
+        _x disableAI "COVER";
+    } forEach _crew;
+
+    private _cargoPosASL = getPosASL _cargo;
+    private _cargoX = _cargoPosASL select 0;
+    private _cargoY = _cargoPosASL select 1;
+    private _cargoASL = _cargoPosASL select 2;
+    private _transitAlt = 45;
+
+    _heli flyInHeight _transitAlt;
+    _heli flyInHeightASL [_cargoASL + _transitAlt, _cargoASL + _transitAlt, _cargoASL + _transitAlt];
+    _heli limitSpeed 60;
+
+    while { count (waypoints _grp) > 0 } do { deleteWaypoint [_grp, 0]; };
+    private _wpTransit = _grp addWaypoint [getPos _cargo, 0];
+    _wpTransit setWaypointType "MOVE";
+    _wpTransit setWaypointBehaviour "CARELESS";
+    _wpTransit setWaypointSpeed "NORMAL";
+    _heli doMove (getPos _cargo);
+
+    private _transitTimer = 0;
+    waitUntil {
+        sleep 0.2;
+        _transitTimer = _transitTimer + 0.2;
+        (_heli distance2D _cargo < 30) || _transitTimer > 40 || !alive _heli || !alive _cargo
+    };
+
+    if (!alive _heli) exitWith {
+        { deleteVehicle _x; } forEach crew _heli;
+        deleteVehicle _heli;
+        deleteGroup _grp;
+    };
+    if (!alive _cargo) exitWith {
+        [_heli, _grp, _crew, _pilot, _dropPos, _ropes] spawn _fnc_heliAbort;
+    };
+
+    _pilot disableAI "MOVE";
+    _pilot disableAI "PATH";
+    doStop _heli;
+    _heli limitSpeed 0;
+
+    private _heliDir = getDir _heli;
+    private _fwd = [sin _heliDir, cos _heliDir, 0];
+
+    private _startHPos = getPosASL _heli;
+    private _startZ = _startHPos select 2;
+    private _alignDuration = 3.0;
+    private _alignStart = time;
+
+    while { (time - _alignStart) < _alignDuration && alive _heli && alive _cargo } do {
+        private _t = (time - _alignStart) / _alignDuration;
+        private _smoothT = _t * _t * (3 - 2 * _t);
+        private _curX = (_startHPos select 0) + ((_cargoX - (_startHPos select 0)) * _smoothT);
+        private _curY = (_startHPos select 1) + ((_cargoY - (_startHPos select 1)) * _smoothT);
+
+        _heli setPosASL [_curX, _curY, _startZ];
+        _heli setVelocity [0, 0, 0];
+        _heli setVectorDirAndUp [_fwd, [0, 0, 1]];
+        sleep 0.02;
+    };
+
+    if (!alive _heli) exitWith {
+        { deleteVehicle _x; } forEach crew _heli;
+        deleteVehicle _heli;
+        deleteGroup _grp;
+    };
+    if (!alive _cargo) exitWith {
+        [_heli, _grp, _crew, _pilot, _dropPos, _ropes] spawn _fnc_heliAbort;
+    };
+
+    private _targetHoverZ = _cargoASL + 8.0;
+    private _descentDistance = _startZ - _targetHoverZ;
+    private _descendDuration = (_descentDistance / 3.0) max 6 min 15;
+    private _descendStart = time;
+
+    while { (time - _descendStart) < _descendDuration && alive _heli && alive _cargo } do {
+        private _t = (time - _descendStart) / _descendDuration;
+        private _smoothT = _t * _t * (3 - 2 * _t);
+        private _curZ = _startZ - (_descentDistance * _smoothT);
+
+        _heli setPosASL [_cargoX, _cargoY, _curZ];
+        _heli setVelocity [0, 0, -2.0];
+        _heli setVectorDirAndUp [_fwd, [0, 0, 1]];
+        sleep 0.02;
+    };
+    _heli setPosASL [_cargoX, _cargoY, _targetHoverZ];
+    _heli setVelocity [0, 0, 0];
+    _heli setVectorDirAndUp [_fwd, [0, 0, 1]];
+
+    if (!alive _heli) exitWith {
+        { deleteVehicle _x; } forEach crew _heli;
+        deleteVehicle _heli;
+        deleteGroup _grp;
+    };
+    if (!alive _cargo) exitWith {
+        [_heli, _grp, _crew, _pilot, _dropPos, _ropes] spawn _fnc_heliAbort;
+    };
+
+    _cargo allowDamage false;
+    _cargo enableRopeAttach true;
+    _heli enableRopeAttach true;
+    _cargo disableCollisionWith _heli;
+    _heli disableCollisionWith _cargo;
+
+    _cargo setVectorDirAndUp [_fwd, [0, 0, 1]];
+    _cargo setMass 1;
+
+    _ropes = [];
+
+    private _ropeLen = 7.0;
+    _ropes pushBack (ropeCreate [_heli, [0, 2.0, -1.2], _cargo, [-1.2, 2.5, 0.4], _ropeLen]);
+    _ropes pushBack (ropeCreate [_heli, [0, 2.0, -1.2], _cargo, [1.2, 2.5, 0.4], _ropeLen]);
+    sleep 0.5;
+    _ropes pushBack (ropeCreate [_heli, [0, -2.0, -1.2], _cargo, [-1.2, -2.5, 0.4], _ropeLen]);
+    _ropes pushBack (ropeCreate [_heli, [0, -2.0, -1.2], _cargo, [1.2, -2.5, 0.4], _ropeLen]);
+
+    sleep 2.5;
+
+    _cargo removeAllEventHandlers "Killed";
+    _cargo removeAllEventHandlers "HandleDamage";
+
+    [_heli, _cargo, _dropPos, _grp, _ropes] spawn {
+        params ["_heli", "_cargo", "_dropPos", "_grp", "_ropes"];
+        sleep 120;
+        if (!isNull _heli && { alive _heli }) then {
+            if (!isNull _cargo) then {
+                detach _cargo;
+                if (!isNull (getSlingLoad _heli)) then { _heli setSlingLoad objNull; };
+                { if (!isNull _x) then { ropeDestroy _x; }; } forEach _ropes;
+                deleteVehicle _cargo;
+            };
+            { deleteVehicle _x; } forEach (crew _heli);
+            deleteVehicle _heli;
+            if (!isNull _grp) then { deleteGroup _grp; };
+        };
+    };
+
+    private _climbDistance = 80.0;
+    private _climbDuration = (_climbDistance / 3.5) max 10 min 20;
+    private _climbStart = time;
+    private _truckStartASL = getPosASL _cargo;
+    private _truckBaseZ = _truckStartASL select 2;
+
+    while { (time - _climbStart) < _climbDuration && alive _heli && alive _cargo } do {
+        private _t = (time - _climbStart) / _climbDuration;
+        private _smoothT = _t * _t * (3 - 2 * _t);
+        private _curHeliZ = _targetHoverZ + (_climbDistance * _smoothT);
+
+        _heli setPosASL [_cargoX, _cargoY, _curHeliZ];
+        _heli setVelocity [0, 0, 2.5];
+        _heli setVectorDirAndUp [_fwd, [0, 0, 1]];
+
+        private _curTruckZ = (_curHeliZ - 8.0) max _truckBaseZ;
+        _cargo setPosASL [_cargoX, _cargoY, _curTruckZ];
+        _cargo setVelocity [0, 0, 2.5];
+        _cargo setVectorDirAndUp [_fwd, [0, 0, 1]];
+
+        sleep 0.02;
+    };
+
+    if (!alive _heli) exitWith {
+        { deleteVehicle _x; } forEach crew _heli;
+        deleteVehicle _heli;
+        deleteGroup _grp;
+    };
+    if (!alive _cargo) exitWith {
+        [_heli, _grp, _crew, _pilot, _dropPos, _ropes] spawn _fnc_heliAbort;
+    };
+
+    { if (!isNull _x) then { ropeDestroy _x; }; } forEach _ropes;
+    _ropes = [];
+
+    _cargo attachTo [_heli, [0, 0, -8.0]];
+    _cargo setVectorDirAndUp [[0, 1, 0], [0, 0, 1]];
+
+    _cargo setMass 1;
+    _cargo enableSimulationGlobal false;
+    _cargo disableCollisionWith _heli;
+
+    _heli setVelocity [(_fwd select 0) * 16, (_fwd select 1) * 16, 5.0];
+
+    _pilot enableAI "MOVE";
+    _pilot enableAI "PATH";
+    _heli flyInHeight 160;
+    _heli limitSpeed 140;
+
+    _grp setBehaviour "AWARE";
+    _grp setCombatMode "BLUE";
+
+    {
+        _x disableAI "FSM";
+        _x disableAI "TARGET";
+        _x disableAI "AUTOTARGET";
+        _x disableAI "AUTOCOMBAT";
+        _x disableAI "COVER";
+        _x setBehaviour "AWARE";
+        _x setCombatMode "BLUE";
+    } forEach _crew;
+
+    _pilot setBehaviour "AWARE";
+    _pilot setCombatMode "BLUE";
+
+    while { count (waypoints _grp) > 0 } do { deleteWaypoint [_grp, 0]; };
+    private _wpEnd = _grp addWaypoint [_dropPos, 0];
+    _wpEnd setWaypointType "MOVE";
+    _wpEnd setWaypointSpeed "FULL";
+    _wpEnd setWaypointBehaviour "AWARE";
+    _heli doMove _dropPos;
+
+    private _remaining = missionNamespace getVariable ["LL_TaskDChemical_RemainingTrucks", []];
+    _remaining = _remaining - [_cargo];
+    missionNamespace setVariable ["LL_TaskDChemical_RemainingTrucks", _remaining];
+
+    private _subTask = _cargo getVariable ["LL_TaskDChemical_SubTask", ""];
+    if (_subTask != "") then {
+        [_subTask, "SUCCEEDED", true] call BIS_fnc_taskSetState;
+    };
+
+    if (count _remaining == 0) then {
+        ["task_chemical", "SUCCEEDED", true] call BIS_fnc_taskSetState;
+        missionNamespace setVariable ["LL_g_taskInProgress", false, true];
+    } else {
+        private _nextTruck = _remaining select 0;
+        private _nextSub = _nextTruck getVariable ["LL_TaskDChemical_SubTask", ""];
+        if (_nextSub != "") then {
+            [_nextSub, true] call BIS_fnc_taskSetCurrent;
+        };
+    };
+
+    waitUntil {
+        sleep 1;
+        if (!alive _heli) exitWith { true };
+
+        private _curAlt = (getPosATL _heli) select 2;
+        if (_curAlt < 70) then {
+            private _v = velocity _heli;
+            _heli setVelocity [_v select 0, _v select 1, ((_v select 2) max 4)];
+            _heli flyInHeight 160;
+        };
+
+        private _players = allPlayers select { alive _x };
+        ({ _x distance2D _heli < 1500 } count _players) == 0 || (_heli distance2D _dropPos < 300)
+    };
+
+    if (!isNull _cargo) then {
+        detach _cargo;
+        deleteVehicle _cargo;
+    };
+    { deleteVehicle _x; } forEach crew _heli;
+    deleteVehicle _heli;
+    deleteGroup _grp;
+};
+
+missionNamespace setVariable ["LL_fnc_taskD_chemical_extract", _fnc_chemical_extract];
+missionNamespace setVariable ["LL_fnc_taskD_chemical_02", _fnc_chemical_extract];
+missionNamespace setVariable ["LL_fnc_taskD_chemical_03", _fnc_chemical_effects];
+
+private _centerPos = getMarkerPos _locMarker;
+private _radius = (markerSize _locMarker) select 0;
+if (_radius == 0) then { _radius = 250; };
+
+private _nearHelipads = nearestObjects [_centerPos, ["Land_HelipadEmpty_F"], _radius];
+private _nearLogics = nearestObjects [_centerPos, ["Logic"], _radius];
+
+private _usedPositions = missionNamespace getVariable ["LL_g_usedTaskPos", []];
+private _validSpawnPoints = _nearHelipads select {
+    private _candidate = _x;
+    !(_candidate getVariable ["LL_logic_occupied", false]) &&
+    { (_usedPositions findIf { _x distance2D _candidate < 25 }) == -1 }
+};
+
+if (count _validSpawnPoints == 0) then {
+    private _fallback = _centerPos findEmptyPosition [10, 150, "B_Truck_01_transport_F"];
+    if (count _fallback == 0) then { _fallback = _centerPos getPos [40, random 360]; };
+    private _dummy = "Land_HelipadEmpty_F" createVehicle _fallback;
+    _validSpawnPoints = [_dummy];
+};
+
+private _numTrucks = 1 + floor(random 2);
+if (_numTrucks > count _validSpawnPoints) then { _numTrucks = count _validSpawnPoints; };
+if (_numTrucks < 1) then { _numTrucks = 1; };
+
+private _selectedLogics = [];
+private _shuffled = _validSpawnPoints call BIS_fnc_arrayShuffle;
+for "_i" from 0 to (_numTrucks - 1) do {
+    private _chosen = _shuffled select _i;
+    _chosen setVariable ["LL_logic_occupied", true];
+    _selectedLogics pushBack _chosen;
+    _usedPositions pushBack (getPosATL _chosen);
+};
+
+missionNamespace setVariable ["LL_g_usedTaskPos", _usedPositions];
+
+missionNamespace setVariable ["LL_TaskDChemical_RemainingTrucks", []];
+missionNamespace setVariable ["LL_TaskDChemical_AllUnits", []];
+missionNamespace setVariable ["LL_TaskDChemical_Failed", false];
+
+private _allTrucks = [];
+private _allUnits = [];
+
+{
+    private _selectedLogic = _x;
+    private _spawnPos = getPosASL _selectedLogic;
+    if (typeOf _selectedLogic == "Land_HelipadEmpty_F") then { deleteVehicle _selectedLogic; };
+    _spawnPos set [2, (_spawnPos select 2) + 0.2];
+
+    private _guardRadii = [
+        [3, 10, 20, "SAFE"],
+        [3, 25, 45, "AWARE"]
+    ];
+
+    {
+        _x params ["_sz", "_minD", "_maxD", "_behav"];
+        private _grp = createGroup [east, true];
+        _grp setBehaviour _behav;
+        _grp setSpeedMode "LIMITED";
+        _grp setCombatMode "YELLOW";
+
+        for "_g" from 1 to _sz do {
+            private _fEnemyClasses = (missionNamespace getVariable ["MISSION_EnemyClasses_Female", []]) select { isClass (configFile >> "CfgVehicles" >> _x) };
+            private _isGuardFemale = (random 1) < 0.15 && { count _fEnemyClasses > 0 };
+            private _guardClass = "O_G_Soldier_F";
+            if (_isGuardFemale) then {
+                private _picked = selectRandom _fEnemyClasses;
+                if (!isNil "_picked" && { _picked != "" }) then {
+                    _guardClass = _picked;
+                };
+            };
+            private _guardSpot = _spawnPos getPos [_minD + random (_maxD - _minD), random 360];
+            _guardSpot set [2, (_spawnPos select 2)];
+            private _guard = _grp createUnit [_guardClass, _guardSpot, [], 0, "CAN_COLLIDE"];
+            [_guard] joinSilent _grp;
+            _guard setVariable ["not_Random", true, true];
+            _guard setPosASL _guardSpot;
+            _guard allowDamage false;
+            [_guard] spawn { sleep 3; if (!isNull (_this select 0)) then { (_this select 0) allowDamage true; }; };
+            [_guard, _isGuardFemale, true] call LL_fnc_applyTakistaniIdentity;
+            _allUnits pushBack _guard;
+            sleep 0.2;
+        };
+
+        private _wp1 = _grp addWaypoint [_spawnPos getPos [_minD + 5, random 360], 0];
+        _wp1 setWaypointType "MOVE";
+        _wp1 setWaypointSpeed "LIMITED";
+        _wp1 setWaypointBehaviour _behav;
+        private _wp2 = _grp addWaypoint [_spawnPos getPos [_maxD, random 360], 0];
+        _wp2 setWaypointType "MOVE";
+        private _wp3 = _grp addWaypoint [waypointPosition _wp1, 0];
+        _wp3 setWaypointType "CYCLE";
+
+        sleep 1.5;
+    } forEach _guardRadii;
+
+    private _truckClasses = ["O_Truck_02_fuel_F", "O_Truck_03_fuel_F", "I_Truck_02_fuel_F"];
+    private _truck = createVehicle [selectRandom _truckClasses, _spawnPos, [], 0, "CAN_COLLIDE"];
+    _truck setPosASL _spawnPos;
+    _truck setDir (random 360);
+
+    _truck setFuel 0;
+    clearWeaponCargoGlobal _truck;
+    clearItemCargoGlobal _truck;
+    clearMagazineCargoGlobal _truck;
+    clearBackpackCargoGlobal _truck;
+
+    _allTrucks pushBack _truck;
+    _allUnits pushBack _truck;
+
+    [_truck] call _fnc_chemical_effects;
+
+    _truck addAction [
+        format ["<t color='#FFFF00'>%1</t>", localize "STR_LL_Task_04_Action"],
+        {
+            params ["_target", "_caller", "_actionId", "_arguments"];
+            _arguments params ["_fnc_extract"];
+            if (_target getVariable ["LL_TaskDChemical_Triggered", false]) exitWith {};
+            _target setVariable ["LL_TaskDChemical_Triggered", true];
+
+            _target removeAction _actionId;
+            _caller playActionNow "PutDown";
+
+            [_target] spawn _fnc_extract;
+        },
+        [_fnc_chemical_extract], 6.0, true, true, "", "alive _target && _this distance _target < 15", 15
+    ];
+
+} forEach _selectedLogics;
+
+missionNamespace setVariable ["LL_TaskDChemical_RemainingTrucks", _allTrucks];
+missionNamespace setVariable ["LL_TaskDChemical_AllUnits", _allUnits];
+
+private _mainDest = if (count _allTrucks > 0) then { [_allTrucks select 0, true] } else { _centerPos };
+
+[
+    group player,
+    ["task_chemical"],
+    [
+        localize "STR_LL_Task_04_Desc",
+        localize "STR_LL_Task_04_Title",
+        ""
+    ],
+    _mainDest,
+    "AUTOASSIGNED",
+    5,
+    true,
+    "danger",
+    false
+] call BIS_fnc_taskCreate;
+call LL_fnc_saveProgress;
+
+{
+    private _truck = _x;
+    private _idx = _forEachIndex + 1;
+    private _subTaskID = format ["task_chemical_%1", _idx];
+    private _subState = if (_idx == 1) then { "AUTOASSIGNED" } else { "CREATED" };
+    private _subPrio = if (_idx == 1) then { 4 } else { 3 };
+
+    [
+        group player,
+        [_subTaskID, "task_chemical"],
+        [
+            format ["%1 (%2/%3)", localize "STR_LL_Task_04_MarkerMain", _idx, count _allTrucks],
+            format ["%1 (%2/%3)", localize "STR_LL_Task_04_MarkerMain", _idx, count _allTrucks],
+            ""
+        ],
+        [_truck, true],
+        _subState,
+        _subPrio,
+        true,
+        "danger",
+        false
+    ] call BIS_fnc_taskCreate;
+
+    _truck setVariable ["LL_TaskDChemical_SubTask", _subTaskID];
+} forEach _allTrucks;
+
+if (count _allTrucks > 0) then {
+    ["task_chemical_1", true] call BIS_fnc_taskSetCurrent;
+};
+
+{ _x createDiaryRecord ["diary", [localize "STR_LL_Diary_Task04_Title", localize "STR_LL_Diary_Task04_Text"]]; } forEach (units group player);

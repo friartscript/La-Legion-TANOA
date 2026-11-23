@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Keys>
+    <Key ID="STR_LL_Debrief_Win_Title">
+        <Original>MISSION ACCOMPLISHED</Original>
+        <English>MISSION ACCOMPLISHED</English>
+        <French>MISSION ACCOMPLIE</French>
+        <Spanish>MISIÓN CUMPLIDA</Spanish>
+        <German>MISSION ERFÜLLT</German>
+        <Italian>MISSIONE COMPIUTA</Italian>
+        <Polish>MISJA ZAKOŃCZONA SUKCESEM</Polish>
+        <Portuguese>MISSÃO CUMPRIDA</Portuguese>
+        <Russian>ЗАДАНИЕ ВЫПОЛНЕНО</Russian>
+        <Czech>MISE SPLNĚNA</Czech>
+        <Korean>임무 완료</Korean>
+        <Japanese>作戦成功</Japanese>
+        <Chinese>任務完成</Chinese>
+        <Chinesesimp>任务完成</Chinesesimp>
+        <Turkish>GÖREV TAMAMLANDI</Turkish>
+    </Key>
+
+    <Key ID="STR_LL_Debrief_Win_Sub">
+        <Original>French Foreign Legion — Sector Secured</Original>
+        <English>French Foreign Legion — Sector Secured</English>
+        <French>Légion Étrangère — Secteur Sécurisé</French>
+        <Spanish>Legión Extranjera — Sector Asegurado</Spanish>
+        <German>Fremdenlegion — Sektor gesichert</German>
+        <Italian>Legione Straniera — Settore Messo in Sicurezza</Italian>
+        <Polish>Legia Cudzoziemska — Sektor Zabezpieczony</Polish>
+        <Portuguese>Legião Estrangeira — Sector Protegido</Portuguese>
+        <Russian>Иностранный легион — Сектор зачищен</Russian>
+        <Czech>Cizinecká legie — Sektor zajištěn</Czech>
+        <Korean>외인부대 — 구역 확보 완료</Korean>
+        <Japanese>外人部隊 — セクター制圧完了</Japanese>
+        <Chinese>法國外籍兵團 — 區域已控制</Chinese>
+        <Chinesesimp>法国外籍军团 — 区域已控制</Chinesesimp>
+        <Turkish>Yabancı Lejyon — Sektör Güvenli</Turkish>
+    </Key>
+
+    <Key ID="STR_LL_Debrief_Win_Desc">
+        <Original>All operational objectives have been neutralized and the squad has been safely extracted. The cartel network on Tanoa has suffered a decisive blow. Legio Patria Nostra.</Original>
+        <English>All operational objectives have been neutralized and the squad has been safely extracted. The cartel network on Tanoa has suffered a decisive blow. Legio Patria Nostra.</English>
+        <French>Tous les objectifs opérationnels ont été neutralisés et l'escouade a été extraite en sécurité. Le réseau du cartel sur Tanoa a subi un coup décisif. Legio Patria Nostra.</French>
+        <Spanish>Todos los objetivos operativos han sido neutralizados y el escuadrón ha sido extraído a salvo. La red del cartel en Tanoa ha sufrido un golpe decisivo. Legio Patria Nostra.</Spanish>
+        <German>Alle operativen Ziele wurden neutralisiert und der Trupp sicher evakuiert. Das Kartellnetzwerk auf Tanoa hat einen entscheidenden Schlag erlitten. Legio Patria Nostra.</German>
+        <Italian>Tutti gli obiettivi operativi sono stati neutralizzati e la squadra è stata estratta in sicurezza. La rete del cartello a Tanoa ha subito un colpo decisivo. Legio Patria Nostra.</Italian>
+        <Polish>Wszystkie cele operacyjne zostały zneutralizowane, a drużyna bezpiecznie ewakuowana. Siatka kartelu na Tanoa otrzymała decydujący cios. Legio Patria Nostra.</Polish>
+        <Portuguese>Todos os objetivos operacionais foram neutralizados e o esquadrão foi extraído em segurança. A rede do cartel em Tanoa sofreu um golpe decisivo. Legio Patria Nostra.</Portuguese>
+        <Russian>Все оперативные задачи выполнены, группа благополучно эвакуирована. Синдикату картеля на Таноа нанесен сокрушительный удар. Legio Patria Nostra.</Russian>
+        <Czech>Všechny operační cíle byly neutralizovány a družstvo bylo bezpečně evakuováno. Síť kartelu na Tanoa utrpěla rozhodující úder. Legio Patria Nostra.</Czech>
+        <Korean>모든 작전 목표가 무력화되었으며 분대가 안전하게 철수했습니다. 타노아의 카르텔 네트워크는 결정적인 타격을 입었습니다. Legio Patria Nostra.</Korean>
+        <Japanese>すべての作戦目標を無力化し、分隊は安全に脱出しました。タノアのカルテル組織は決定的な打撃を受けました。Legio Patria Nostra。</Japanese>
+        <Chinese>所有作戰目標已被消滅，小隊已安全撤離。塔諾阿的卡特爾網絡遭受毀滅性打擊。Legio Patria Nostra。</Chinese>
+        <Chinesesimp>所有作战目标已被消灭，小队已安全撤离。塔诺阿的卡特尔网络遭受毁灭性打击。Legio Patria Nostra。</Chinesesimp>
+        <Turkish>Tüm operasyonel hedefler etkisiz hale getirildi ve manga güvenli bir şekilde tahliye edildi. Tanoa'daki kartel ağı belirleyici bir darbe aldı. Legio Patria Nostra.</Turkish>
+    </Key>
+
+    <Key ID="STR_LL_Debrief_Fail_Title">
+        <Original>MISSION FAILED</Original>
+        <English>MISSION FAILED</English>
+        <French>ÉCHEC DE LA MISSION</French>
+        <Spanish>MISIÓN FALLIDA</Spanish>
+        <German>MISSION GESCHEITERT</German>
+        <Italian>MISSIONE FALLITA</Italian>
+        <Polish>MISJA NIEPOWIODŁA SIĘ</Polish>
+        <Portuguese>MISSÃO FALHOU</Portuguese>
+        <Russian>ЗАДАНИЕ ПРОВАЛЕНО</Russian>
+        <Czech>MISE SELHALA</Czech>
+        <Korean>임무 실패</Korean>
+        <Japanese>作戦失敗</Japanese>
+        <Chinese>任務失敗</Chinese>
+        <Chinesesimp>任务失败</Chinesesimp>
+        <Turkish>GÖREV BAŞARISIZ</Turkish>
+    </Key>
+
+    <Key ID="STR_LL_Debrief_Fail_Sub">
+        <Original>Operational Failure — Casualties Sustained</Original>
+        <English>Operational Failure — Casualties Sustained</English>
+        <French>Échec Opérationnel — Pertes Majeures</French>
+        <Spanish>Fallo Operativo — Bajas Sufridas</Spanish>
+        <German>Operation fehlgeschlagen — Schwere Verluste</German>
+        <Italian>Fallimento Operativo — Perdite Subite</Italian>
+        <Polish>Niepowodzenie Operacyjne — Poważne Straty</Polish>
+        <Portuguese>Falha Operacional — Baixas Sofridas</Portuguese>
+        <Russian>Провал операции — Тяжелые потери</Russian>
+        <Czech>Operační selhání — Vážné ztráty</Czech>
+        <Korean>작전 실패 — 심각한 손실 발생</Korean>
+        <Japanese>作戦失敗 — 深刻な損害</Japanese>
+        <Chinese>行動失敗 — 遭受嚴重傷亡</Chinese>
+        <Chinesesimp>行动失败 — 遭受严重伤亡</Chinesesimp>
+        <Turkish>Operasyonel Başarısızlık — Ağır Kayıplar</Turkish>
+    </Key>
+
+    <Key ID="STR_LL_Debrief_Fail_Desc">
+        <Original>The squad was wiped out or key objectives could not be completed. The cartel maintains its grip on the archipelago.</Original>
+        <English>The squad was wiped out or key objectives could not be completed. The cartel maintains its grip on the archipelago.</English>
+        <French>L'escouade a été neutralisée ou les objectifs prioritaires n'ont pas pu être menés à bien. Le cartel maintient son emprise sur l'archipel.</French>
+        <Spanish>El escuadrón fue neutralizado o los objetivos clave no pudieron completarse. El cartel mantiene su control sobre el archipiélago.</Spanish>
+        <German>Der Trupp wurde ausgeschaltet oder die Hauptziele konnten nicht erfüllt werden. Das Kartell behält die Kontrolle über das Archipel.</German>
+        <Italian>La squadra è stata annientata o gli obiettivi chiave non sono stati raggiunti. Il cartello mantiene il controllo sull'arcipelago.</Italian>
+        <Polish>Drużyna została wyeliminowana lub kluczowe cele nie zostały zrealizowane. Kartel utrzymuje kontrolę nad archipelagiem.</Polish>
+        <Portuguese>O esquadrão foi eliminado ou os objetivos principais não foram cumpridos. O cartel mantém o controlo sobre o arquipélago.</Portuguese>
+        <Russian>Группа была уничтожена или ключевые задачи не были выполнены. Картель сохраняет контроль над архипелагом.</Russian>
+        <Czech>Družstvo bylo zničeno nebo se nepodařilo splnit klíčové cíle. Kartel si udržuje kontrolu nad souostrovím.</Czech>
+        <Korean>분대가 전멸했거나 주요 임무를 완수하지 못했습니다. 카르텔이 여전히 군도를 장악하고 있습니다.</Korean>
+        <Japanese>分隊が全滅したか、重要目標を達成できませんでした。カルテルは依然として諸島を支配しています。</Japanese>
+        <Chinese>小隊被殲滅或關鍵目標未達成。卡特爾依然控制著該群島。</Chinese>
+        <Chinesesimp>小队被歼灭或关键目标未达成。卡特尔依然控制着该群岛。</Chinesesimp>
+        <Turkish>Manga etkisiz hale getirildi veya kilit hedefler tamamlanamadı. Kartel takımada üzerindeki hakimiyetini sürdürüyor.</Turkish>
+    </Key>
+</Keys>
