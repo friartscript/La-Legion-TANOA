@@ -3,7 +3,7 @@ _ctx params ["_cam", "_heli", "_destPos", "_startPos", "_allUnits", "_t0", "_hel
 
 call LL_fnc_camReset;
 
-if (!isNull (driver _heli)) then { (driver _heli) action ["LandGearUp", _heli]; };
+if (isServer && {!isNull (driver _heli)}) then { (driver _heli) action ["LandGearUp", _heli]; };
 
 private _camGround5 = [_destPos, 50, 70, _lzASL, 2.0] call LL_fnc_findOpenCamSpot;
 if (_camGround5 isEqualTo []) then {

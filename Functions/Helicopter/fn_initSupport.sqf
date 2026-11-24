@@ -1,32 +1,48 @@
-params [["_unit", player, [objNull]]];
-
 if (!hasInterface) exitWith {};
-if (isNull _unit || {!alive _unit}) exitWith {};
-if (_unit != player) exitWith {};
 
-if (_unit getVariable ["LL_support_initialized", false]) exitWith {};
-_unit setVariable ["LL_support_initialized", true];
+if (missionNamespace getVariable ["LL_support_monitor_started", false]) exitWith {};
+missionNamespace setVariable ["LL_support_monitor_started", true];
 
-private _menu = _unit getVariable ["BIS_fnc_addCommMenuItem_menu", []];
-{
-    if (_x isEqualType [] && {count _x > 0}) then {
-        [_unit, _x select 0] call BIS_fnc_removeCommMenuItem;
+[] spawn {
+    waitUntil { sleep 0.5; !isNull player && { alive player } };
+
+    private _fnc_clearMenu = {
+        params ["_u"];
+        private _existingIDs = _u getVariable ["LL_support_commIDs", []];
+        {
+            [_u, _x] call BIS_fnc_removeCommMenuItem;
+        } forEach _existingIDs;
+        _u setVariable ["LL_support_commIDs", []];
+        _u setVariable ["BIS_fnc_addCommMenuItem_menu", []];
     };
-} forEach +_menu;
 
-private _existingIDs = _unit getVariable ["LL_support_commIDs", []];
-{
-    [_unit, _x] call BIS_fnc_removeCommMenuItem;
-} forEach _existingIDs;
+    private _hasMenu = false;
 
-_unit setVariable ["BIS_fnc_addCommMenuItem_menu", []];
+    while {true} do {
+        sleep 1.5;
 
-private _newIDs = [];
+        private _introDone = missionNamespace getVariable ["MISSION_intro_finished", false];
+        private _u = player;
+        private _isLeader = (!isNull _u) && { alive _u } && { (leader group _u) == _u };
 
-_newIDs pushBack ([_unit, "Support_Ammo"] call BIS_fnc_addCommMenuItem);
-_newIDs pushBack ([_unit, "Support_Vehicle"] call BIS_fnc_addCommMenuItem);
-_newIDs pushBack ([_unit, "Support_Extract"] call BIS_fnc_addCommMenuItem);
-_newIDs pushBack ([_unit, "Support_CAS"] call BIS_fnc_addCommMenuItem);
-_newIDs pushBack ([_unit, "Support_Drone"] call BIS_fnc_addCommMenuItem);
-
-_unit setVariable ["LL_support_commIDs", _newIDs];
+        if (_introDone && _isLeader) then {
+            if (!_hasMenu) then {
+                [_u] call _fnc_clearMenu;
+                private _newIDs = [];
+                _newIDs pushBack ([_u, "Support_Ammo"] call BIS_fnc_addCommMenuItem);
+                _newIDs pushBack ([_u, "Support_Vehicle"] call BIS_fnc_addCommMenuItem);
+                _newIDs pushBack ([_u, "Support_Extract"] call BIS_fnc_addCommMenuItem);
+                _newIDs pushBack ([_u, "Support_CAS"] call BIS_fnc_addCommMenuItem);
+                _newIDs pushBack ([_u, "Support_Drone"] call BIS_fnc_addCommMenuItem);
+                _u setVariable ["LL_support_commIDs", _newIDs];
+                missionNamespace setVariable ["LL_group_leader", _u, true];
+                _hasMenu = true;
+            };
+        } else {
+            if (_hasMenu) then {
+                [_u] call _fnc_clearMenu;
+                _hasMenu = false;
+            };
+        };
+    };
+};

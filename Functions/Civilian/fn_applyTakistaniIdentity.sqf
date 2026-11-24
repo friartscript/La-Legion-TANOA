@@ -64,8 +64,8 @@ if (_isFemale) then {
     if (count _mFaces > 0) then {
         _unit setFace (selectRandom _mFaces);
     };
-    private _mVoices = missionNamespace getVariable ["MISSION_Voices_Male", ["Male01FRE", "Male01ENGFRE", "Male01ENG"]];
-    private _spk = if (count _mVoices > 0) then { selectRandom _mVoices } else { "Male01FRE" };
+    private _mVoices = missionNamespace getVariable ["MISSION_Voices_Male", ["Male01ENG", "Male02ENG", "Male03ENG", "Male04ENG", "Male05ENG"]];
+    private _spk = if (count _mVoices > 0) then { selectRandom _mVoices } else { "Male01ENG" };
     _unit setSpeaker _spk;
     _unit setPitch 1.0;
     [_unit, 1.0, _spk, _fullName, _firstName, _lastName] spawn {

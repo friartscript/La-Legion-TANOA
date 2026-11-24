@@ -3,13 +3,15 @@ _ctx params ["_cam", "_heli", "_destPos", "_startPos", "_allUnits", "_t0", "_hel
 
 call LL_fnc_camReset;
 
-[_heli] spawn {
-    params ["_h"];
-    for "_i" from 1 to 6 do {
-        if (!isNull _h && {!isNull (driver _h)}) then {
-            (driver _h) action ["LandGear", _h];
+if (isServer) then {
+    [_heli] spawn {
+        params ["_h"];
+        for "_i" from 1 to 6 do {
+            if (!isNull _h && {!isNull (driver _h)}) then {
+                (driver _h) action ["LandGear", _h];
+            };
+            sleep 0.5;
         };
-        sleep 0.5;
     };
 };
 

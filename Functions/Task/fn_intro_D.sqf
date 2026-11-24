@@ -3,8 +3,10 @@ _ctx params ["_cam", "_heli", "_destPos", "_startPos", "_allUnits", "_t0", "_hel
 
 call LL_fnc_camReset;
 
-_heli flyInHeight 45;
-_heli limitSpeed 105;
+if (isServer) then {
+    _heli flyInHeight 45;
+    _heli limitSpeed 105;
+};
 
 missionNamespace setVariable ["LL_p4_t0", _t0 + 30.03];
 

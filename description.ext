@@ -160,10 +160,12 @@ class CfgFunctions
             class applyRoE {};
             class badgeManager {};
             class identityManager {};
+            class leaderMonitor {};
             class randomizeLoadout {};
             class reloadWeapons {};
             class stuckUnitManager {};
             class switchToAI {};
+            class transferCommand {};
         };
 
         class UI

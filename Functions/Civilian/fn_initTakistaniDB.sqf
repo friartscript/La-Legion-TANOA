@@ -134,10 +134,9 @@ if (_terrain in ["altis", "stratis", "malden"]) then {
                 "C_Man_casual_1_F_tanoan", "C_Man_casual_2_F_tanoan", "C_Man_casual_3_F_tanoan",
                 "C_Man_casual_4_F_tanoan", "C_Man_casual_5_F_tanoan", "C_Man_casual_6_F_tanoan",
                 "C_man_sport_1_F_tanoan", "C_man_sport_2_F_tanoan", "C_man_sport_3_F_tanoan",
-                "C_Man_casual_1_F_euro", "C_Man_casual_2_F_euro",
-                "C_Man_casual_1_F_afro", "C_Man_casual_2_F_afro",
+                "C_Man_casual_shorts_F", "C_Man_Fisherman_01_F",
                 "C_Man_casual_1_F_asia", "C_Man_casual_2_F_asia",
-                "C_Man_casual_shorts_F", "C_man_w_worker_F", "C_Man_Fisherman_01_F"
+                "C_Man_casual_1_F_afro", "C_Man_casual_2_F_afro"
             ];
             MISSION_CivilianNames_Male = [
                 ["Aluna Babitu", "Aluna", "Babitu"], ["Abesaloma Bari", "Abesaloma", "Bari"],
@@ -150,24 +149,22 @@ if (_terrain in ["altis", "stratis", "malden"]) then {
                 ["Ietoro Rambuka", "Ietoro", "Rambuka"], ["Ihaia Reihana", "Ihaia", "Reihana"],
                 ["Kaikane Semiti", "Kaikane", "Semiti"], ["Keon Serevi", "Keon", "Serevi"],
                 ["Kimo Timoci", "Kimo", "Timoci"], ["Lagi Tonono", "Lagi", "Tonono"],
-                ["Liko Tuikabe", "Liko", "Tuikabe"], ["Lucas Turagabea", "Lucas", "Turagabea"],
-                ["Malo Umbari", "Malo", "Umbari"], ["Maro Veitayaki", "Maro", "Veitayaki"],
-                ["Matiu Veniri", "Matiu", "Veniri"], ["Maui Vidini", "Maui", "Vidini"],
-                ["Pio Vunibaka", "Pio", "Vunibaka"], ["Ropata Waqanitoga", "Ropata", "Waqanitoga"],
-                ["Sefa Potaka", "Sefa", "Potaka"], ["Siaki Teheiura", "Siaki", "Teheiura"],
-                ["Taine Vanaa", "Taine", "Vanaa"], ["Tane Temaru", "Tane", "Temaru"],
-                ["Tangaroa Flosse", "Tangaroa", "Flosse"], ["Tanielu Salmon", "Tanielu", "Salmon"],
-                ["Tui Chavez", "Tui", "Chavez"], ["Wainani Tupua", "Wainani", "Tupua"],
-                ["Tua Naituyaga", "Tua", "Naituyaga"], ["Mateo Erenavula", "Mateo", "Erenavula"],
-                ["Teiva Nakaunicina", "Teiva", "Nakaunicina"], ["Moana Katalou", "Moana", "Katalou"],
-                ["Jean-Baptiste Duvuduvukulu", "Jean-Baptiste", "Duvuduvukulu"],
-                ["Keanu Maikelekelevesi", "Keanu", "Maikelekelevesi"],
-                ["Tamatoa Molias", "Tamatoa", "Molias"], ["Marama Deli", "Marama", "Deli"],
-                ["Teva Ieremia", "Teva", "Ieremia"], ["Manoa Babitu", "Manoa", "Babitu"],
-                ["Ariki Koroi", "Ariki", "Koroi"], ["Gabriel Mara", "Gabriel", "Mara"],
-                ["Louis Ganilau", "Louis", "Ganilau"], ["Paul Serevi", "Paul", "Serevi"],
-                ["Marc Naivalu", "Marc", "Naivalu"], ["Julien Lomu", "Julien", "Lomu"],
-                ["Alexandre Timoci", "Alexandre", "Timoci"], ["David Rambuka", "David", "Rambuka"]
+                ["Liko Tuikabe", "Liko", "Tuikabe"], ["Malo Umbari", "Malo", "Umbari"],
+                ["Maro Veitayaki", "Maro", "Veitayaki"], ["Matiu Veniri", "Matiu", "Veniri"],
+                ["Maui Vidini", "Maui", "Vidini"], ["Pio Vunibaka", "Pio", "Vunibaka"],
+                ["Ropata Waqanitoga", "Ropata", "Waqanitoga"], ["Sefa Potaka", "Sefa", "Potaka"],
+                ["Siaki Teheiura", "Siaki", "Teheiura"], ["Taine Vanaa", "Taine", "Vanaa"],
+                ["Tane Temaru", "Tane", "Temaru"], ["Tangaroa Flosse", "Tangaroa", "Flosse"],
+                ["Tanielu Salmon", "Tanielu", "Salmon"], ["Tui Chavez", "Tui", "Chavez"],
+                ["Wainani Tupua", "Wainani", "Tupua"], ["Tua Naituyaga", "Tua", "Naituyaga"],
+                ["Mateo Erenavula", "Mateo", "Erenavula"], ["Teiva Nakaunicina", "Teiva", "Nakaunicina"],
+                ["Moana Katalou", "Moana", "Katalou"], ["Tamatoa Duvuduvukulu", "Tamatoa", "Duvuduvukulu"],
+                ["Keanu Maikelekelevesi", "Keanu", "Maikelekelevesi"], ["Teva Molias", "Teva", "Molias"],
+                ["Manoa Deli", "Manoa", "Deli"], ["Ariki Ieremia", "Ariki", "Ieremia"],
+                ["Kaipo Tabualevu", "Kaipo", "Tabualevu"], ["Kalani Tagicakibau", "Kalani", "Tagicakibau"],
+                ["Kapono Baleisuva", "Kapono", "Baleisuva"], ["Keahi Caucaunibuca", "Keahi", "Caucaunibuca"],
+                ["Nainoa Ratuvili", "Nainoa", "Ratuvili"], ["Rawiri Kuruisaravi", "Rawiri", "Kuruisaravi"],
+                ["Tamahere Navunivalu", "Tamahere", "Navunivalu"], ["Tavita Vuidreketi", "Tavita", "Vuidreketi"]
             ];
             MISSION_CivilianNames_Female = [
                 ["Moana Delai", "Moana", "Delai"], ["Vaite Ganilau", "Vaite", "Ganilau"],
@@ -178,45 +175,42 @@ if (_terrain in ["altis", "stratis", "malden"]) then {
                 ["Tarita Veitayaki", "Tarita", "Veitayaki"], ["Hinano Tuikabe", "Hinano", "Tuikabe"],
                 ["Tahia Potaka", "Tahia", "Potaka"], ["Kiri Teheiura", "Kiri", "Teheiura"],
                 ["Malina Vanaa", "Malina", "Vanaa"], ["Kalea Temaru", "Kalea", "Temaru"],
-                ["Marie Salmon", "Marie", "Salmon"], ["Chloe Chavez", "Chloe", "Chavez"],
-                ["Sophie Tupua", "Sophie", "Tupua"], ["Camille Naituyaga", "Camille", "Naituyaga"],
-                ["Lea Erenavula", "Lea", "Erenavula"], ["Emilie Katalou", "Emilie", "Katalou"],
-                ["Sarah Nakaunicina", "Sarah", "Nakaunicina"], ["Claire Duvuduvukulu", "Claire", "Duvuduvukulu"],
-                ["Heidi Molias", "Heidi", "Molias"], ["Poeiti Maikelekelevesi", "Poeiti", "Maikelekelevesi"],
-                ["Anapa Bari", "Anapa", "Bari"], ["Teura Bole", "Teura", "Bole"]
+                ["Poeiti Salmon", "Poeiti", "Salmon"], ["Anapa Chavez", "Anapa", "Chavez"],
+                ["Teura Tupua", "Teura", "Tupua"], ["Alamea Naituyaga", "Alamea", "Naituyaga"],
+                ["Haunani Erenavula", "Haunani", "Erenavula"], ["Kaia Katalou", "Kaia", "Katalou"],
+                ["Kalama Nakaunicina", "Kalama", "Nakaunicina"], ["Luana Duvuduvukulu", "Luana", "Duvuduvukulu"],
+                ["Maeva Molias", "Maeva", "Molias"], ["Mele Maikelekelevesi", "Mele", "Maikelekelevesi"],
+                ["Nalani Tabualevu", "Nalani", "Tabualevu"], ["Noelani Tagicakibau", "Noelani", "Tagicakibau"],
+                ["Olina Baleisuva", "Olina", "Baleisuva"], ["Talia Caucaunibuca", "Talia", "Caucaunibuca"],
+                ["Ulani Ratuvili", "Ulani", "Ratuvili"], ["Waiola Kuruisaravi", "Waiola", "Kuruisaravi"],
+                ["Tala Navunivalu", "Tala", "Navunivalu"], ["Fetia Vuidreketi", "Fetia", "Vuidreketi"]
             ];
             MISSION_CivilianMaleFaces = [
                 "TanoanHead_A3_01", "TanoanHead_A3_02", "TanoanHead_A3_03",
                 "TanoanHead_A3_04", "TanoanHead_A3_05", "TanoanHead_A3_06",
                 "TanoanHead_A3_07", "TanoanHead_A3_08", "TanoanHead_A3_09",
-                "AfricanHead_01", "AfricanHead_02", "AfricanHead_03",
                 "AsianHead_A3_01", "AsianHead_A3_02", "AsianHead_A3_03", "AsianHead_A3_04",
                 "AsianHead_A3_05", "AsianHead_A3_06", "AsianHead_A3_07",
-                "WhiteHead_01", "WhiteHead_02", "WhiteHead_03", "WhiteHead_04", "WhiteHead_05",
-                "WhiteHead_06", "WhiteHead_07", "WhiteHead_08", "WhiteHead_09", "WhiteHead_10"
+                "AfricanHead_01", "AfricanHead_02", "AfricanHead_03"
             ];
             MISSION_Voices_Male = [
-                "Male01FRE", "Male02FRE", "Male03FRE",
-                "Male01ENGFRE", "Male02ENGFRE",
-                "Male01ENG", "Male02ENG", "Male03ENG", "Male04ENG", "Male05ENG"
+                "Male01ENG", "Male02ENG", "Male03ENG", "Male04ENG", "Male05ENG",
+                "Male06ENG", "Male07ENG", "Male08ENG", "Male09ENG", "Male10ENG",
+                "Male11ENG", "Male12ENG"
             ];
             MISSION_CivilianUniforms_Male = [
                 "U_C_Man_casual_1_F", "U_C_Man_casual_2_F", "U_C_Man_casual_3_F",
                 "U_C_Man_casual_4_F", "U_C_Man_casual_5_F", "U_C_Man_casual_6_F",
                 "U_C_man_sport_1_F", "U_C_man_sport_2_F", "U_C_man_sport_3_F",
+                "U_C_Poor_shorts_1_F", "U_C_Commoner_shorts_F",
                 "U_C_Poloshirt_blue", "U_C_Poloshirt_burgundy", "U_C_Poloshirt_salmon",
-                "U_C_Poloshirt_stripped", "U_C_Poloshirt_tricolour", "U_C_Poloshirt_redwhite",
-                "U_C_Mechanic_01_F", "U_C_IDAP_Man_shorts_F", "U_C_IDAP_Man_TeeShorts_F",
-                "U_C_IDAP_Man_casual_F", "U_C_IDAP_Man_Jeans_F", "U_C_IDAP_Man_cargo_F",
-                "U_C_ArtTShirt_01_v1_F", "U_C_ArtTShirt_01_v2_F", "U_C_ArtTShirt_01_v3_F",
-                "U_C_ArtTShirt_01_v4_F", "U_C_ArtTShirt_01_v5_F", "U_C_ArtTShirt_01_v6_F"
+                "U_C_Poloshirt_stripped", "U_C_Poloshirt_tricolour", "U_C_Poloshirt_redwhite"
             ];
             MISSION_CivilianHats = [
                 "H_StrawHat", "H_StrawHat_dark",
-                "H_Cap_surfer", "H_Bandanna_surfer_blk",
-                "H_Cap_blu", "H_Cap_red", "H_Cap_tan", "H_Cap_oli", "H_Cap_blk", "H_Cap_grn",
-                "H_Booniehat_tna_F", "H_Booniehat_oli", "H_Booniehat_tan",
-                "H_Bandanna_blu", "H_Bandanna_gry", "H_Bandanna_khk", "H_Bandanna_sand", "H_Bandanna_sgg",
+                "H_Hat_Tanoa_F",
+                "H_Cap_surfer", "H_Bandanna_surfer", "H_Bandanna_surfer_blk", "H_Bandanna_surfer_grn",
+                "H_Booniehat_tna_F",
                 "", "", ""
             ];
             MISSION_EnemyClasses_Male = [

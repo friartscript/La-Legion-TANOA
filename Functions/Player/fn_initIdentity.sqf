@@ -76,14 +76,12 @@ private _allNamesTyped = [];
 if (isNil "LL_UsedNames") then { LL_UsedNames = []; };
 
 private _squad = [];
-if (!isNull player) then {
-    { _squad pushBackUnique _x; } forEach (units group player);
-};
-{ _squad pushBackUnique _x; } forEach (playableUnits + switchableUnits);
+if (!isNil "player_0" && {!isNull player_0}) then { _squad pushBackUnique player_0; };
 for "_i" from 0 to 6 do {
     private _u = missionNamespace getVariable [format ["player_%1", _i], objNull];
     if (!isNull _u) then { _squad pushBackUnique _u; };
 };
+{ _squad pushBackUnique _x; } forEach (playableUnits + switchableUnits);
 _squad = _squad select { !isNull _x };
 
 {
@@ -124,8 +122,13 @@ _squad = _squad select { !isNull _x };
     
 } forEach _squad;
 
+private _currentLeader = missionNamespace getVariable ["LL_group_leader", objNull];
+if (isNull _currentLeader) then {
+    _currentLeader = if (!isNil "player_0" && {!isNull player_0}) then { player_0 } else { leader group (_squad select 0) };
+};
+
 {
-    if (_forEachIndex == 0 || _x == leader group _x) then {
+    if (_x == _currentLeader) then {
         _x setUnitRank "SERGEANT";
     } else {
         if (_forEachIndex in [1, 2]) then {

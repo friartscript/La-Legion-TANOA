@@ -3784,5 +3784,107 @@ Sadece hassas atış. Hedef araç yakınında patlayıcı yasaktır.</Turkish>
             <Chinesesimp>%1 已在队长附近重整。</Chinesesimp>
             <Turkish>%1 liderin yakınında yeniden toplandı.</Turkish>
         </Key>
+        <Key ID="STR_LL_TransferCommand_Action">
+            <Original>Transfer Command</Original>
+            <English>Transfer Command</English>
+            <French>Donner le commandement</French>
+            <Spanish>Transferir el mando</Spanish>
+            <German>Kommando übertragen</German>
+            <Italian>Cedere il comando</Italian>
+            <Polish>Przekaż dowodzenie</Polish>
+            <Portuguese>Transferir o comando</Portuguese>
+            <Russian>Передать командование</Russian>
+            <Czech>Předat velení</Czech>
+            <Korean>지휘권 이양</Korean>
+            <Japanese>指揮権の委譲</Japanese>
+            <Chinese>轉移指揮權</Chinese>
+            <Chinesesimp>转移指挥权</Chinesesimp>
+            <Turkish>Komutayı Devret</Turkish>
+        </Key>
+        <Key ID="STR_LL_TransferCommand_Cancel">
+            <Original>Cancel Transfer</Original>
+            <English>Cancel Transfer</English>
+            <French>Annuler le transfert</French>
+            <Spanish>Cancelar transferencia</Spanish>
+            <German>Übertragung abbrechen</German>
+            <Italian>Annulla trasferimento</Italian>
+            <Polish>Anuluj przekazanie</Polish>
+            <Portuguese>Cancelar transferência</Portuguese>
+            <Russian>Отменить передачу</Russian>
+            <Czech>Zrušit předání</Czech>
+            <Korean>이양 취소</Korean>
+            <Japanese>委譲をキャンセル</Japanese>
+            <Chinese>取消轉移</Chinese>
+            <Chinesesimp>取消转移</Chinesesimp>
+            <Turkish>Devri İptal Et</Turkish>
+        </Key>
+        <Key ID="STR_LL_TransferCommand_To">
+            <Original>Transfer to: %1</Original>
+            <English>Transfer to: %1</English>
+            <French>Transférer à : %1</French>
+            <Spanish>Transferir a: %1</Spanish>
+            <German>Übertragen an: %1</German>
+            <Italian>Trasferisci a: %1</Italian>
+            <Polish>Przekaż dla: %1</Polish>
+            <Portuguese>Transferir para: %1</Portuguese>
+            <Russian>Передать: %1</Russian>
+            <Czech>Předat: %1</Czech>
+            <Korean>이양 대상: %1</Korean>
+            <Japanese>委譲先: %1</Japanese>
+            <Chinese>轉移給：%1</Chinese>
+            <Chinesesimp>转移给：%1</Chinesesimp>
+            <Turkish>Devret: %1</Turkish>
+        </Key>
+        <Key ID="STR_LL_TransferCommand_Notification">
+            <Original>[COMMAND] %1 has transferred command to %2.</Original>
+            <English>[COMMAND] %1 has transferred command to %2.</English>
+            <French>[COMMANDEMENT] %1 a transféré le commandement à %2.</French>
+            <Spanish>[MANDO] %1 ha transferido el mando a %2.</Spanish>
+            <German>[KOMMANDO] %1 hat das Kommando an %2 übertragen.</German>
+            <Italian>[COMANDO] %1 ha ceduto il comando a %2.</Italian>
+            <Polish>[DOWODZENIE] %1 przekazał dowodzenie dla %2.</Polish>
+            <Portuguese>[COMANDO] %1 transferiu o comando para %2.</Portuguese>
+            <Russian>[КОМАНДОВАНИЕ] %1 передал командование бойцу %2.</Russian>
+            <Czech>[VELENÍ] %1 předal velení hráči %2.</Czech>
+            <Korean>[지휘] %1 대원이 %2 대원에게 지휘권을 이양했습니다.</Korean>
+            <Japanese>[指揮] %1 が %2 に指揮権を委譲しました。</Japanese>
+            <Chinese>[指揮] %1 已將指揮權轉移給 %2。</Chinese>
+            <Chinesesimp>[指挥] %1 已将指挥权转移给 %2。</Chinesesimp>
+            <Turkish>[KOMUTA] %1 komutayı %2 personeline devretti.</Turkish>
+        </Key>
+        <Key ID="STR_LL_TransferCommand_AutoNotice">
+            <Original>[COMMAND] Leader disconnected or unavailable. Command assigned to %1.</Original>
+            <English>[COMMAND] Leader disconnected or unavailable. Command assigned to %1.</English>
+            <French>[COMMANDEMENT] Chef déconnecté ou indisponible. Commandement attribué à %1.</French>
+            <Spanish>[MANDO] Líder desconectado o no disponible. Mando asignado a %1.</Spanish>
+            <German>[KOMMANDO] Anführer getrennt oder nicht verfügbar. Kommando an %1 zugewiesen.</German>
+            <Italian>[COMANDO] Leader disconnesso o non disponibile. Comando assegnato a %1.</Italian>
+            <Polish>[DOWODZENIE] Dowódca rozłączony lub niedostępny. Dowodzenie przypisane do %1.</Polish>
+            <Portuguese>[COMANDO] Líder desconectado ou indisponível. Comando atribuído a %1.</Portuguese>
+            <Russian>[КОМАНДОВАНИЕ] Командир отключился или недоступен. Командование передано %1.</Russian>
+            <Czech>[VELENÍ] Velitel odpojen nebo nedostupný. Velení přiřazeno hráči %1.</Czech>
+            <Korean>[지휘] 분대장이 접속 종료되었거나 부재중입니다. %1 대원에게 지휘권이 지정되었습니다.</Korean>
+            <Japanese>[指揮] 指揮官が切断されたか不在です。%1 に指揮権が割り当てられました。</Japanese>
+            <Chinese>[指揮] 隊長已斷線或無法行動。指揮權指派給 %1。</Chinese>
+            <Chinesesimp>[指挥] 队长已断线或无法行动。指挥权指派给 %1。</Chinesesimp>
+            <Turkish>[KOMUTA] Lider ayrıldı veya ulaşılamıyor. Komuta %1 personeline atandı.</Turkish>
+        </Key>
+        <Key ID="STR_LL_Leader_Designated">
+            <Original>You have been designated as team leader.</Original>
+            <English>You have been designated as team leader.</English>
+            <French>Vous avez été désigné comme chef.</French>
+            <Spanish>Has sido designado como líder de equipo.</Spanish>
+            <German>Sie wurden als Gruppenführer bestimmt.</German>
+            <Italian>Sei stato designato come caposquadra.</Italian>
+            <Polish>Zostałeś wyznaczony na dowódcę drużyny.</Polish>
+            <Portuguese>Você foi designado como líder de equipe.</Portuguese>
+            <Russian>Вы назначены командиром группы.</Russian>
+            <Czech>Byl jste jmenován velitelem týmu.</Czech>
+            <Korean>분대장으로 지정되었습니다.</Korean>
+            <Japanese>チームリーダーに任命されました。</Japanese>
+            <Chinese>你已被指定為小隊指揮官。</Chinese>
+            <Chinesesimp>你已被指定为小队指挥官。</Chinesesimp>
+            <Turkish>Takım lideri olarak atandınız.</Turkish>
+        </Key>
     </Package>
 </Project>

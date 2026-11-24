@@ -216,7 +216,7 @@ private _validZones = [];
     private _hasValidPair = false;
     for "_i" from 0 to (count _zSites - 1) do {
         for "_j" from (_i + 1) to (count _zSites - 1) do {
-            if (((_zSites select _i select 2) distance2D (_zSites select _j select 2)) >= 950) exitWith {
+            if (((_zSites select _i select 2) distance2D (_zSites select _j select 2)) >= 600) exitWith {
                 _hasValidPair = true;
             };
         };
@@ -224,6 +224,10 @@ private _validZones = [];
     };
     if (_hasValidPair) then { _validZones pushBack _z; };
 } forEach ["B", "C", "D", "E", "A"];
+
+if (count _validZones == 0 && { count _siteCandidates >= 2 }) then {
+    _validZones pushBack "ALL";
+};
 
 if (count _validZones == 0) exitWith {
     missionNamespace setVariable ["LL_g_startLZ", [], true];
@@ -259,28 +263,36 @@ _candidateZones append (_otherValid call BIS_fnc_arrayShuffle);
 private _chosenZone = "";
 private _startLZ = [];
 private _selectedSites = [];
+private _tiers = [2000, 3000, 4500, 999999];
 
 {
-    private _zone = _x;
-    private _candSites = _siteCandidates select { (_x select 1) == _zone };
+    private _tierMaxDist = _x;
+    private _tierMaxSpan = _tierMaxDist * 1.35;
 
-    if (count _candSites >= 2) then {
-        private _desiredSiteCount = 2 + floor (random 2);
-        private _shuffledSites = _candSites call BIS_fnc_arrayShuffle;
-        private _validChains = [];
+    {
+        private _zone = _x;
+        private _candSites = if (_zone == "ALL") then { _siteCandidates } else { _siteCandidates select { (_x select 1) == _zone } };
 
-        if (_desiredSiteCount >= 3 && { count _shuffledSites >= 3 }) then {
-            for "_i" from 0 to (count _shuffledSites - 1) do {
-                private _s1 = _shuffledSites select _i;
-                for "_j" from 0 to (count _shuffledSites - 1) do {
-                    if (_i != _j) then {
-                        private _s2 = _shuffledSites select _j;
-                        if (((_s1 select 2) distance2D (_s2 select 2)) >= 950) then {
-                            for "_k" from 0 to (count _shuffledSites - 1) do {
-                                if (_k != _i && { _k != _j }) then {
-                                    private _s3 = _shuffledSites select _k;
-                                    if (((_s2 select 2) distance2D (_s3 select 2)) >= 950 && { ((_s1 select 2) distance2D (_s3 select 2)) >= 800 }) then {
-                                        _validChains pushBack [_s1, _s2, _s3];
+        if (count _candSites >= 2) then {
+            private _desiredSiteCount = 2 + floor (random 2);
+            private _validChains = [];
+
+            if (_desiredSiteCount >= 3 && { count _candSites >= 3 }) then {
+                for "_i" from 0 to (count _candSites - 1) do {
+                    private _s1 = _candSites select _i;
+                    for "_j" from 0 to (count _candSites - 1) do {
+                        if (_i != _j) then {
+                            private _s2 = _candSites select _j;
+                            private _d12 = (_s1 select 2) distance2D (_s2 select 2);
+                            if (_d12 >= 600 && { _d12 <= _tierMaxDist }) then {
+                                for "_k" from 0 to (count _candSites - 1) do {
+                                    if (_k != _i && { _k != _j }) then {
+                                        private _s3 = _candSites select _k;
+                                        private _d23 = (_s2 select 2) distance2D (_s3 select 2);
+                                        private _d13 = (_s1 select 2) distance2D (_s3 select 2);
+                                        if (_d23 >= 600 && { _d23 <= _tierMaxDist } && { _d13 >= 600 } && { _d13 <= _tierMaxSpan }) then {
+                                            _validChains pushBack [(_d12 + _d23), [_s1, _s2, _s3]];
+                                        };
                                     };
                                 };
                             };
@@ -288,45 +300,56 @@ private _selectedSites = [];
                     };
                 };
             };
-        };
 
-        if (count _validChains == 0) then {
-            for "_i" from 0 to (count _shuffledSites - 1) do {
-                private _s1 = _shuffledSites select _i;
-                for "_j" from 0 to (count _shuffledSites - 1) do {
-                    if (_i != _j) then {
-                        private _s2 = _shuffledSites select _j;
-                        if (((_s1 select 2) distance2D (_s2 select 2)) >= 950) then {
-                            _validChains pushBack [_s1, _s2];
+            if (count _validChains == 0) then {
+                for "_i" from 0 to (count _candSites - 1) do {
+                    private _s1 = _candSites select _i;
+                    for "_j" from 0 to (count _candSites - 1) do {
+                        if (_i != _j) then {
+                            private _s2 = _candSites select _j;
+                            private _d12 = (_s1 select 2) distance2D (_s2 select 2);
+                            if (_d12 >= 600 && { _d12 <= _tierMaxDist }) then {
+                                _validChains pushBack [_d12, [_s1, _s2]];
+                            };
                         };
                     };
                 };
             };
+
+            if (count _validChains > 0) then {
+                _validChains = [_validChains, [], { _x select 0 }, "ASCEND"] call BIS_fnc_sortBy;
+                private _minScore = (_validChains select 0) select 0;
+                private _topPool = _validChains select { (_x select 0) <= (_minScore * 1.3) || { (_x select 0) <= (_minScore + 350) } };
+                _topPool = _topPool call BIS_fnc_arrayShuffle;
+                private _remainder = _validChains select { !(_x in _topPool) };
+                private _testChains = _topPool + _remainder;
+
+                {
+                    private _chain = _x select 1;
+                    private _s1Center = (_chain select 0) select 2;
+                    private _candLZ = [_s1Center, _chain, 950, 1500, 120] call _fnc_findSafePosition;
+
+                    if (count _candLZ < 3) then {
+                        _candLZ = [_s1Center, _chain, 800, 1800, 150] call _fnc_findSafePosition;
+                    };
+                    if (count _candLZ < 3) then {
+                        _candLZ = [_s1Center, _chain, 650, 2200, 180] call _fnc_findSafePosition;
+                    };
+
+                    if (count _candLZ == 3) exitWith {
+                        _startLZ = _candLZ;
+                        _selectedSites = _chain;
+                        _chosenZone = if (_zone == "ALL") then { (_chain select 0) select 1 } else { _zone };
+                    };
+                } forEach _testChains;
+            };
         };
 
-        if (count _validChains > 0) then {
-            _validChains = _validChains call BIS_fnc_arrayShuffle;
-
-            {
-                private _chain = _x;
-                private _s1Center = (_chain select 0) select 2;
-                private _candLZ = [_s1Center, _chain, 950, 1500, 120] call _fnc_findSafePosition;
-
-                if (count _candLZ < 3) then {
-                    _candLZ = [_s1Center, _chain, 950, 1800, 150] call _fnc_findSafePosition;
-                };
-
-                if (count _candLZ == 3) exitWith {
-                    _startLZ = _candLZ;
-                    _selectedSites = _chain;
-                    _chosenZone = _zone;
-                };
-            } forEach _validChains;
-        };
-    };
+        if (count _startLZ == 3 && { count _selectedSites >= 2 }) exitWith {};
+    } forEach _candidateZones;
 
     if (count _startLZ == 3 && { count _selectedSites >= 2 }) exitWith {};
-} forEach _candidateZones;
+} forEach _tiers;
 
 if (count _startLZ < 3 || { count _selectedSites < 2 }) exitWith {
     missionNamespace setVariable ["LL_g_startLZ", [], true];

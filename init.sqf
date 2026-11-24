@@ -96,6 +96,45 @@ if (hasInterface) then {
 };
 
 
+if (isNil "player_0" || {isNull (missionNamespace getVariable ["player_0", objNull])}) then {
+    private _allPlayable = playableUnits + switchableUnits;
+    if (!isNull player) then { _allPlayable pushBackUnique player; };
+    private _slCandidate = objNull;
+    {
+        if (!isNull _x && { (typeOf _x find "_SL_" != -1) || { rank _x == "SERGEANT" } }) exitWith {
+            _slCandidate = _x;
+        };
+    } forEach _allPlayable;
+    if (isNull _slCandidate && { count _allPlayable > 0 }) then {
+        _slCandidate = _allPlayable select 0;
+    };
+    if (!isNull _slCandidate) then {
+        player_0 = _slCandidate;
+        _slCandidate setVehicleVarName "player_0";
+        missionNamespace setVariable ["player_0", _slCandidate, true];
+    };
+};
+
+if (isServer) then {
+    private _slUnit = missionNamespace getVariable ["player_0", objNull];
+    private _initLeader = objNull;
+    if (!isNull _slUnit && { isPlayer _slUnit }) then {
+        _initLeader = _slUnit;
+    } else {
+        private _humanPlayers = allPlayers select { alive _x && { side group _x in [west, independent] } };
+        if (count _humanPlayers > 0) then {
+            _initLeader = selectRandom _humanPlayers;
+        } else {
+            _initLeader = _slUnit;
+        };
+    };
+    if (!isNull _initLeader) then {
+        missionNamespace setVariable ["LL_group_leader", _initLeader, true];
+        (group _initLeader) selectLeader _initLeader;
+        [(group _initLeader), _initLeader] remoteExecCall ["selectLeader", 0];
+    };
+};
+
 if (isNil "LL_var_takistaniDB_init") then {
     LL_var_takistaniDB_init = true;
     [] call LL_fnc_initTakistaniDB;
@@ -114,9 +153,13 @@ if (isServer) then {
     [] spawn LL_fnc_preventWater;
     [] spawn LL_fnc_identityManager;
     [] spawn LL_fnc_startOperation;
+    [] spawn LL_fnc_leaderMonitor;
 };
 
 if (!hasInterface) exitWith {};
+
+[] spawn LL_fnc_initSupport;
+if (isMultiplayer) then { [player] call LL_fnc_transferCommand; };
 
 LL_fnc_clearScreenEffects = {
     params [["_unit", player, [objNull]]];
@@ -218,7 +261,12 @@ for "_i" from 0 to 6 do {
 } forEach _allSquadInit;
 
 [] spawn {
-    waitUntil { sleep 1; missionNamespace getVariable ["MISSION_intro_finished", false] };
+    waitUntil { sleep 0.5; missionNamespace getVariable ["MISSION_intro_finished", false] };
+    cutText ["", "BLACK IN", 1.5];
+    1 fadeSound 1;
+    1 fadeMusic 1;
+    player switchCamera "INTERNAL";
+    showCinemaBorder false;
     [] spawn LL_fnc_reloadWeapons;
 
     private _lastPlayer = objNull;
@@ -268,6 +316,9 @@ for "_i" from 0 to 6 do {
         [_lastPlayer] call LL_fnc_addRoeActions;
         [] spawn LL_fnc_stuckUnitManager;
         [] call LL_fnc_initSupport;
+        if (isMultiplayer) then {
+            [_lastPlayer] call LL_fnc_transferCommand;
+        };
         [] call LL_fnc_initBriefing;
         [] call LL_fnc_initContext;
 
