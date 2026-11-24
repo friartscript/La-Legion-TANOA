@@ -63,6 +63,7 @@ if (isServer) then {
     vehicule_team allowDamage false;
     publicVariable "vehicule_team";
     missionNamespace setVariable ["LL_intro_vehDir", _chosenVehDir, true];
+    [vehicule_team] call LL_fnc_initVehicleLoadout;
 
     [] spawn LL_fnc_spawnStartArsenal;
 

@@ -119,6 +119,8 @@ if (hasInterface) then {
     player switchCamera "INTERNAL";
     showCinemaBorder false;
 
+    [player] call LL_fnc_ensureUnitNVG;
+
     if (sunOrMoon < 0.2) then {
         if (currentVisionMode player != 1) then {
             player action ["NVGoggles", player];
@@ -224,11 +226,13 @@ if (isServer) then {
         _x enableFatigue false;
         _x enableStamina false;
         _x setCustomAimCoef 0.1;
+        [_x] call LL_fnc_ensureUnitNVG;
     } forEach _allSquad;
 
     if (!isNil "vehicule_team" && {!isNull vehicule_team}) then {
         vehicule_team setDamage 0;
         vehicule_team allowDamage true;
+        [vehicule_team] call LL_fnc_initVehicleLoadout;
     };
 
     waitUntil { (diag_tickTime - _t0) >= 90.72 };

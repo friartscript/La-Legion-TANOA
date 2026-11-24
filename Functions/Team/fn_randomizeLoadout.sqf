@@ -117,7 +117,7 @@ _unit addHeadgear _newHeadgear;
 _unit addGoggles _newGoggle;
 
 _unit addWeapon _binocular;
-_unit linkItem _nvg;
+[_unit] call LL_fnc_ensureUnitNVG;
 _unit linkItem "ItemMap";
 _unit linkItem "ItemCompass";
 _unit linkItem "ItemWatch";

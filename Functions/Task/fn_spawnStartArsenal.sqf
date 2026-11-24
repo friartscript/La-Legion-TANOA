@@ -59,7 +59,7 @@ if (!isServer) exitWith {};
         
         [player] call LL_fnc_badgeManager;
         
-        [] spawn LL_fnc_initVehicleLoadout;
+        [] remoteExecCall ["LL_fnc_initVehicleLoadout", 2];
     }] call BIS_fnc_addScriptedEventHandler;
 
     private _mkrName = "mkr_start_arsenal";
@@ -117,7 +117,7 @@ if (!isServer) exitWith {};
             sleep 0.5;
             missionNamespace getVariable ["MISSION_intro_finished", false]
         };
-        [] spawn LL_fnc_initVehicleLoadout;
+        [] remoteExecCall ["LL_fnc_initVehicleLoadout", 2];
     };
 
     private _duration = 600;

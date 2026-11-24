@@ -86,7 +86,7 @@ _unit linkItem "ItemMap";
 _unit linkItem "ItemCompass";
 _unit linkItem "ItemWatch";
 _unit linkItem "ItemRadio";
-_unit linkItem "NVGogglesB_blk_F";
+[_unit] call LL_fnc_ensureUnitNVG;
 
 if (_pWeapon != "") then { _unit selectWeapon _pWeapon; };
 [_unit] spawn {

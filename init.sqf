@@ -95,6 +95,24 @@ if (hasInterface) then {
     };
 };
 
+if (isNil "LL_fnc_ensureUnitNVG") then {
+    LL_fnc_ensureUnitNVG = {
+        params [["_u", objNull, [objNull]]];
+        if (isNull _u || { !alive _u }) exitWith {};
+        if (!local _u) exitWith { [_u] remoteExecCall ["LL_fnc_ensureUnitNVG", _u]; };
+        private _nvgClass = "NVGoggles_tna_F";
+        if (!isClass (configFile >> "CfgWeapons" >> _nvgClass)) then { _nvgClass = "NVGogglesB_blk_F"; };
+        if (!isClass (configFile >> "CfgWeapons" >> _nvgClass)) then { _nvgClass = "NVGoggles"; };
+        if (hmd _u == "") then {
+            _u linkItem _nvgClass;
+            if (hmd _u == "") then {
+                _u addItem _nvgClass;
+                _u assignItem _nvgClass;
+            };
+        };
+    };
+};
+
 
 if (isNil "player_0" || {isNull (missionNamespace getVariable ["player_0", objNull])}) then {
     private _allPlayable = playableUnits + switchableUnits;
@@ -251,6 +269,7 @@ for "_i" from 0 to 6 do {
         _x enableStamina false;
         _x setCustomAimCoef 0.1;
         [_x] call LL_fnc_badgeManager;
+        [_x] call LL_fnc_ensureUnitNVG;
         if (rating _x < 5000) then { _x addRating (5000 - (rating _x)); };
         _x removeAllEventHandlers "HandleRating";
         _x addEventHandler ["HandleRating", {
@@ -268,6 +287,24 @@ for "_i" from 0 to 6 do {
     player switchCamera "INTERNAL";
     showCinemaBorder false;
     [] spawn LL_fnc_reloadWeapons;
+
+    [] spawn {
+        while {true} do {
+            sleep 10;
+            private _sq = [];
+            if (!isNull player) then { { _sq pushBackUnique _x; } forEach (units group player); };
+            { _sq pushBackUnique _x; } forEach (playableUnits + switchableUnits);
+            for "_i" from 0 to 6 do {
+                private _u = missionNamespace getVariable [format ["player_%1", _i], objNull];
+                if (!isNull _u) then { _sq pushBackUnique _u; };
+            };
+            {
+                if (!isNull _x && { alive _x && { local _x && { hmd _x == "" } } }) then {
+                    [_x] call LL_fnc_ensureUnitNVG;
+                };
+            } forEach _sq;
+        };
+    };
 
     private _lastPlayer = objNull;
     while {true} do {
@@ -296,6 +333,7 @@ for "_i" from 0 to 6 do {
             _newUnit enableStamina false;
             _newUnit setCustomAimCoef 0.1;
             [_newUnit] call LL_fnc_badgeManager;
+            [_newUnit] call LL_fnc_ensureUnitNVG;
             _newUnit removeAllEventHandlers "HandleRating";
             _newUnit addEventHandler ["HandleRating", {
                 params ["_unit", "_rating"];

@@ -4,7 +4,7 @@ from PIL import Image
 images_dir = os.path.join(os.path.dirname(__file__), "Images")
 
 # 001.png -> 001.jpg, 002.png -> 002.jpg, etc.
-for name in ["001", "002", "003", "004"]:
+for name in ["001", "002", "003", "004", "005","006"]:
     png_path = os.path.join(images_dir, f"{name}.png")
     jpg_path = os.path.join(images_dir, f"{name}.jpg")
     if os.path.exists(png_path):

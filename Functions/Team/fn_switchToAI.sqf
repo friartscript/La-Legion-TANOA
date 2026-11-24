@@ -56,6 +56,7 @@ if (count _livingUnits > 0) then {
         };
         [_targetAI] call LL_fnc_addRoeActions;
         [_targetAI] call LL_fnc_initSupport;
+        [_targetAI] call LL_fnc_ensureUnitNVG;
 
         private _allCandidateTasks = [
             "task_extraction",

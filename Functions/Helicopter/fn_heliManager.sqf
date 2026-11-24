@@ -447,6 +447,7 @@ private _fnExecDelivery = {
         ["STR_TAG_Msg_Vehicle_Dropped"] call LL_fnc_radioMessage;
 
         missionNamespace setVariable ["vehicule_team", _cargo, true];
+        [_cargo] call LL_fnc_initVehicleLoadout;
     };
 
     false  
@@ -693,6 +694,10 @@ while { true } do {
                 {
                     _cargo addMagazineCargoGlobal [_x, _magMultiplier];
                 } forEach _uniqueMags;
+
+                if (_type == "VEHICULE") then {
+                    [_cargo] call LL_fnc_initVehicleLoadout;
+                };
             };
 
             private _markerName = [_type, _lzPos] call _fnCreateMarker;

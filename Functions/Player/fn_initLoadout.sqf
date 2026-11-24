@@ -196,7 +196,7 @@ private _isAceMedical = isClass (configFile >> "CfgPatches" >> "ace_medical");
         _unit linkItem "ItemWatch";
         _unit linkItem "ItemRadio";
         _unit linkItem "ItemGPS";
-        _unit linkItem _nvg;
+        [_unit] call LL_fnc_ensureUnitNVG;
 
         if (_pMag != "") then {
             private _magCount = if (_isGunner) then { 5 } else { 8 };
