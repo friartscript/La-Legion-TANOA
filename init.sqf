@@ -49,12 +49,48 @@ if (hasInterface) then {
                 default { str (str _object) };
             };
         };
+
+        if (!isNil "BettIR_Patches_fnc_onLoadoutUpdated" && { isNil "LL_patched_BettIR_Patches" }) then {
+            LL_patched_BettIR_Patches = true;
+            LL_orig_BettIR_Patches_onLoadout = BettIR_Patches_fnc_onLoadoutUpdated;
+            BettIR_Patches_fnc_onLoadoutUpdated = {
+                params [["_cbaLoadout", []]];
+                if (!(_cbaLoadout isEqualType []) || { count _cbaLoadout < 10 }) then {
+                    _cbaLoadout = [[],[],[],[],[],[],"","",[],["","","","","",""]];
+                };
+                [_cbaLoadout] call LL_orig_BettIR_Patches_onLoadout;
+            };
+        };
+        if (!isNil "BettIR_fnc_onLoadoutUpdated" && { isNil "LL_patched_BettIR" }) then {
+            LL_patched_BettIR = true;
+            LL_orig_BettIR_onLoadout = BettIR_fnc_onLoadoutUpdated;
+            BettIR_fnc_onLoadoutUpdated = {
+                params [["_cbaLoadout", []]];
+                if (!(_cbaLoadout isEqualType []) || { count _cbaLoadout < 10 }) then {
+                    _cbaLoadout = [[],[],[],[],[],[],"","",[],["","","","","",""]];
+                };
+                [_cbaLoadout] call LL_orig_BettIR_onLoadout;
+            };
+        };
+        if (!isNil "CBA_fnc_localEvent" && { isNil "LL_patched_CBA_localEvent" }) then {
+            LL_patched_CBA_localEvent = true;
+            LL_orig_CBA_localEvent = CBA_fnc_localEvent;
+            CBA_fnc_localEvent = {
+                params ["_event", ["_args", []]];
+                if (_event == "cba_events_loadoutUpdated" && { _args isEqualType [] && { count _args > 1 } }) then {
+                    if (!((_args select 1) isEqualType []) || { count (_args select 1) < 10 }) then {
+                        _args set [1, [[],[],[],[],[],[],"","",[],["","","","","",""]]];
+                    };
+                };
+                _this call LL_orig_CBA_localEvent;
+            };
+        };
     };
 
-    for "_i" from 1 to 20 do {
-        if (!isNil "CBA_fnc_encodeJSON") exitWith {
-            call _patchFnc;
-        };
+    call _patchFnc;
+
+    for "_i" from 1 to 40 do {
+        call _patchFnc;
         sleep 0.5;
     };
 };

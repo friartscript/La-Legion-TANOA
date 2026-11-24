@@ -714,37 +714,57 @@ missionNamespace setVariable ["LL_fnc_taskD_chemical_03", _fnc_chemical_effects]
 private _centerPos = getMarkerPos _locMarker;
 private _radius = (markerSize _locMarker) select 0;
 if (_radius == 0) then { _radius = 250; };
+missionNamespace setVariable ["LL_TaskDChemical_Center", _centerPos, true];
 
 private _nearHelipads = nearestObjects [_centerPos, ["Land_HelipadEmpty_F"], _radius];
 private _nearLogics = nearestObjects [_centerPos, ["Logic"], _radius];
 
 private _usedPositions = missionNamespace getVariable ["LL_g_usedTaskPos", []];
-private _validSpawnPoints = _nearHelipads select {
+private _validSpawnPoints = (_nearLogics + _nearHelipads) select {
     private _candidate = _x;
-    !(_candidate getVariable ["LL_logic_occupied", false]) &&
-    { (_usedPositions findIf { _x distance2D _candidate < 25 }) == -1 }
+    !(_candidate getVariable ["LL_logic_occupied", false]) && 
+    { (_usedPositions findIf { _x distance2D _candidate < 20 }) == -1 }
 };
 
 if (count _validSpawnPoints == 0) then {
-    private _fallback = _centerPos findEmptyPosition [10, 150, "B_Truck_01_transport_F"];
-    if (count _fallback == 0) then { _fallback = _centerPos getPos [40, random 360]; };
-    private _dummy = "Land_HelipadEmpty_F" createVehicle _fallback;
-    _validSpawnPoints = [_dummy];
+    private _nearRoads = _centerPos nearRoads _radius;
+    private _candPos = [];
+    if (count _nearRoads > 0) then {
+        _candPos = getPosATL (selectRandom _nearRoads);
+    } else {
+        _candPos = [_centerPos, 10, _radius, 8, 0, 0.25, 0] call BIS_fnc_findSafePos;
+    };
+    if (count _candPos == 2) then { _candPos pushBack 0; };
+    if (_candPos isEqualTo [] || surfaceIsWater _candPos) then {
+        _candPos = _centerPos getPos [30, random 360];
+        _candPos set [2, 0];
+    };
+    private _dummyLogic = "Logic" createVehicleLocal _candPos;
+    _validSpawnPoints = [_dummyLogic];
 };
 
-private _numTrucks = 1 + floor(random 2);
+private _sitePrimary = missionNamespace getVariable [format ["LL_g_sitePrimaryPos_%1", _locMarker], []];
+private _numTrucks = 1 + floor (random 2);
 if (_numTrucks > count _validSpawnPoints) then { _numTrucks = count _validSpawnPoints; };
 if (_numTrucks < 1) then { _numTrucks = 1; };
 
-private _selectedLogics = [];
 private _shuffled = _validSpawnPoints call BIS_fnc_arrayShuffle;
-for "_i" from 0 to (_numTrucks - 1) do {
-    private _chosen = _shuffled select _i;
-    _chosen setVariable ["LL_logic_occupied", true];
-    _selectedLogics pushBack _chosen;
-    _usedPositions pushBack (getPosATL _chosen);
+private _selectedLogics = _shuffled select [0, _numTrucks];
+
+if (count _sitePrimary == 3) then {
+    private _pLogicMatches = _validSpawnPoints select { (getPosATL _x) distance2D _sitePrimary < 2 };
+    if (count _pLogicMatches > 0) then {
+        private _pLogic = _pLogicMatches select 0;
+        _selectedLogics = [_pLogic] + ((_validSpawnPoints - [_pLogic]) select [0, _numTrucks - 1]);
+    };
 };
 
+{
+    _x setVariable ["LL_logic_occupied", true];
+    private _p = getPosATL _x;
+    if (_p isEqualTo [0,0,0]) then { _p = getPos _x; };
+    _usedPositions pushBack _p;
+} forEach _selectedLogics;
 missionNamespace setVariable ["LL_g_usedTaskPos", _usedPositions];
 
 missionNamespace setVariable ["LL_TaskDChemical_RemainingTrucks", []];
@@ -789,7 +809,7 @@ private _fnc_findSafeLandPos = {
     private _spawnPos = getPosATL _selectedLogic;
     if (_spawnPos isEqualTo [0,0,0]) then { _spawnPos = getPos _selectedLogic; };
     if (typeOf _selectedLogic == "Land_HelipadEmpty_F") then { deleteVehicle _selectedLogic; };
-    _spawnPos set [2, (_spawnPos select 2) + 0.2];
+    _spawnPos set [2, 0];
 
     private _guardRadii = [
         [3, 14, 28, 45, "SAFE"],
@@ -856,16 +876,37 @@ private _fnc_findSafeLandPos = {
         sleep 0.5;
     } forEach _guardRadii;
 
-    private _truckClasses = ["O_Truck_02_fuel_F", "O_Truck_03_fuel_F", "I_Truck_02_fuel_F"];
-    private _truck = createVehicle [selectRandom _truckClasses, _spawnPos, [], 0, "CAN_COLLIDE"];
-    _truck setPosASL _spawnPos;
-    _truck setDir (random 360);
+    private _nearBldg = nearestBuilding _spawnPos;
+    if (!isNull _nearBldg && { _spawnPos distance2D _nearBldg < 12 }) then {
+        private _roads = _spawnPos nearRoads 35;
+        if (count _roads > 0) then {
+            _spawnPos = getPosATL (_roads select 0);
+        } else {
+            private _safe = [_spawnPos, 5, 40, 7, 0, 0.3, 0] call BIS_fnc_findSafePos;
+            if (count _safe == 2) then { _safe pushBack 0; };
+            _spawnPos = _safe;
+        };
+    };
+    _spawnPos set [2, 0];
 
+    private _truckClasses = ["O_Truck_02_fuel_F", "O_Truck_03_fuel_F", "I_Truck_02_fuel_F"];
+    private _truck = createVehicle [selectRandom _truckClasses, _spawnPos, [], 0, "NONE"];
+    if (isNull _truck) then {
+        _truck = createVehicle ["O_Truck_02_fuel_F", _spawnPos, [], 0, "CAN_COLLIDE"];
+    };
+
+    _truck allowDamage false;
+    _truck setPosATL [_spawnPos select 0, _spawnPos select 1, 0];
+    _truck setVectorUp surfaceNormal _spawnPos;
+    _truck setVelocity [0, 0, 0];
+    _truck setDir (random 360);
     _truck setFuel 0;
+    _truck lock 2;
     clearWeaponCargoGlobal _truck;
     clearItemCargoGlobal _truck;
     clearMagazineCargoGlobal _truck;
     clearBackpackCargoGlobal _truck;
+
 
     _allTrucks pushBack _truck;
     _allUnits pushBack _truck;
@@ -943,3 +984,37 @@ if (count _allTrucks > 0) then {
 };
 
 { _x createDiaryRecord ["diary", [localize "STR_LL_Diary_Task04_Title", localize "STR_LL_Diary_Task04_Text"]]; } forEach (units group player);
+[_allTrucks] spawn {
+    params ["_trucks"];
+    sleep 1.0;
+    {
+        if (!isNull _x && { alive _x }) then {
+            private _p = getPosATL _x;
+            if ((_p select 2) < -0.1 || (_p select 2) > 1.5) then {
+                _x setPosATL [_p select 0, _p select 1, 0];
+                _x setVectorUp surfaceNormal _p;
+                _x setVelocity [0, 0, 0];
+            };
+        };
+    } forEach _trucks;
+
+    while {
+        (missionNamespace getVariable ["LL_g_taskInProgress", false]) &&
+        !(missionNamespace getVariable ["LL_TaskDChemical_Failed", false]) &&
+        ({ !isNull _x && { alive _x } } count _trucks > 0)
+    } do {
+        sleep 2;
+        private _players = allPlayers select { alive _x };
+        {
+            private _truck = _x;
+            if (!isNull _truck && { alive _truck }) then {
+                if (!(_truck getVariable ["LL_damage_enabled", false])) then {
+                    if ({ _x distance2D _truck < 80 } count _players > 0) then {
+                        _truck setVariable ["LL_damage_enabled", true];
+                        _truck allowDamage true;
+                    };
+                };
+            };
+        } forEach _trucks;
+    };
+};

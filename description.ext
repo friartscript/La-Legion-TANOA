@@ -7,11 +7,11 @@ class Header
 
 briefingName = "MISSION LÉGION ÉTRANGÈRE";
 onLoadName = "MISSION LÉGION ÉTRANGÈRE";
-onLoadMission = "Tanoa — Opérations de la Légion Étrangère";
+onLoadMission = "Tanoa — Opérations de la Légion Étrangère (SP / COOP 1-6 + IA)";
 author = "Friart Script";
 loadScreen = "loadScreen.jpg";
 overviewPicture = "overviewPicture.jpg";
-overviewText = "Tanoa — Opérations de la Légion Étrangère. Sécurisation de l'archipel et neutralisation des menaces.";
+overviewText = "Tanoa — Opérations de la Légion Étrangère. Solo & Coop 1-6 (IA disponibles en multi pour compléter l'escouade). Sécurisation de l'archipel et neutralisation des menaces.";
 disabledAI = 0;
 
 respawn = 3;
@@ -120,9 +120,14 @@ class CfgFunctions
             class extraction {};
             class extraction_secure {};
             class initVehicleLoadout {};
-            class intro_01 {};
-            class intro_02 {};
-            class intro_02_new {};
+            class intro_A {};
+            class intro_B {};
+            class intro_C {};
+            class intro_D {};
+            class intro_E {};
+            class intro_F {};
+            class intro_G {};
+            class intro_H {};
             class prepareMissionSites {};
             class saveProgress {};
             class selectOperation {};

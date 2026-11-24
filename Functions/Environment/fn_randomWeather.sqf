@@ -1,7 +1,7 @@
 if (!isServer) exitWith {};
 
-private _minMinutes = 6 * 60;
-private _maxMinutes = 19 * 60 + 30;
+private _minMinutes = 5 * 60;
+private _maxMinutes = 21 * 60;
 private _totalMinutes = _minMinutes + floor (random (_maxMinutes - _minMinutes + 1));
 private _hour = floor (_totalMinutes / 60);
 private _minute = _totalMinutes % 60;

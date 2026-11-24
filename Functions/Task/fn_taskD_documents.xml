@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Keys>
+    <Key ID="STR_LL_Task_01_Title">
+        <Original>Retrieve Cartel Documents</Original>
+        <English>Retrieve Cartel Documents</English>
+        <French>Récupérer les documents du cartel</French>
+        <Spanish>Recuperar los documentos del cartel</Spanish>
+        <German>Kartell-Dokumente beschaffen</German>
+        <Italian>Recupera i documenti del cartello</Italian>
+        <Polish>Odzyskaj dokumenty kartelu</Polish>
+        <Portuguese>Recuperar os documentos do cartel</Portuguese>
+        <Russian>Захватить документы картеля</Russian>
+        <Czech>Získat dokumenty kartelu</Czech>
+        <Korean>카르텔 문서 회수</Korean>
+        <Japanese>カルテルの文書を回収</Japanese>
+        <Chinese>獲取卡特爾文件</Chinese>
+        <Chinesesimp>获取卡特尔文件</Chinesesimp>
+        <Turkish>Kartel Belgelerini Ele Geçir</Turkish>
+    </Key>
+    <Key ID="STR_LL_Task_01_Desc">
+        <Original>Search the officer's body and recover the confidential cartel documents.</Original>
+        <English>Search the officer's body and recover the confidential cartel documents.</English>
+        <French>Fouillez le corps de l'officier pour récupérer les documents confidentiels du cartel.</French>
+        <Spanish>Registre el cuerpo del oficial para recuperar los documentos confidenciales del cartel.</Spanish>
+        <German>Durchsuchen Sie die Leiche des Offiziers nach vertraulichen Dokumenten des Kartells.</German>
+        <Italian>Perquisisci il corpo dell'ufficiale per recuperare i documenti riservati del cartello.</Italian>
+        <Polish>Przeszukaj ciało oficera i odzyskaj poufne dokumenty kartelu.</Polish>
+        <Portuguese>Reviste o corpo do oficial e recupere os documentos confidenciais do cartel.</Portuguese>
+        <Russian>Обыщите тело офицера и заберите конфиденциальные документы картеля.</Russian>
+        <Czech>Prohledejte tělo důstojníka a zajistěte tajné dokumenty kartelu.</Czech>
+        <Korean>장교의 시신을 수색하여 카르텔 기밀 문서를 회수하십시오.</Korean>
+        <Japanese>将校の遺体を捜索し、カルテルの機密文書を回収せよ。</Japanese>
+        <Chinese>搜查軍官遺體並回收卡特爾機密文件。</Chinese>
+        <Chinesesimp>搜查军官遗体并回收卡特尔机密文件。</Chinesesimp>
+        <Turkish>Subayın üzerini arayın ve gizli kartel belgelerini ele geçirin.</Turkish>
+    </Key>
+    <Key ID="STR_LL_Task_01_Marker">
+        <Original>Cartel Documents</Original>
+        <English>Cartel Documents</English>
+        <French>Documents du cartel</French>
+        <Spanish>Documentos del cartel</Spanish>
+        <German>Kartell-Dokumente</German>
+        <Italian>Documenti del cartello</Italian>
+        <Polish>Dokumenty kartelu</Polish>
+        <Portuguese>Documentos do cartel</Portuguese>
+        <Russian>Документы картеля</Russian>
+        <Czech>Dokumenty kartelu</Czech>
+        <Korean>카르텔 문서</Korean>
+        <Japanese>カルテル文書</Japanese>
+        <Chinese>卡特爾文件</Chinese>
+        <Chinesesimp>卡特尔文件</Chinesesimp>
+        <Turkish>Kartel Belgeleri</Turkish>
+    </Key>
+    <Key ID="STR_LL_Diary_Task01_Title">
+        <Original>Mission: Cartel Documents</Original>
+        <English>Mission: Cartel Documents</English>
+        <French>Mission : Documents du cartel</French>
+        <Spanish>Misión: Documentos del cartel</Spanish>
+        <German>Mission: Kartell-Dokumente</German>
+        <Italian>Missione: Documenti del cartello</Italian>
+        <Polish>Misja: Dokumenty kartelu</Polish>
+        <Portuguese>Missão: Documentos do cartel</Portuguese>
+        <Russian>Задача: Документы картеля</Russian>
+        <Czech>Úkol: Dokumenty kartelu</Czech>
+        <Korean>임무: 카르텔 문서</Korean>
+        <Japanese>任務：カルテル文書</Japanese>
+        <Chinese>任務：卡特爾文件</Chinese>
+        <Chinesesimp>任务：卡特尔文件</Chinesesimp>
+        <Turkish>Görev: Kartel Belgeleri</Turkish>
+    </Key>
+    <Key ID="STR_LL_Diary_Task01_Text">
+        <Original>Intelligence indicates that a cartel officer is holding shipping routes and logistical schedules. Eliminate the officer and search the body to secure the intelligence.</Original>
+        <English>Intelligence indicates that a cartel officer is holding shipping routes and logistical schedules. Eliminate the officer and search the body to secure the intelligence.</English>
+        <French>Les renseignements indiquent qu'un officier du cartel détient les routes maritimes et les plannings logistiques. Éliminez l'officier et fouillez son corps pour sécuriser les documents.</French>
+        <Spanish>Los informes de inteligencia indican que un oficial del cartel posee rutas marítimas y calendarios logísticos. Elimine al oficial y registre su cuerpo para asegurar los documentos.</Spanish>
+        <German>Geheimdienstberichte deuten darauf hin, dass ein Offizier des Kartells Schifffahrtsrouten und Logistikpläne besitzt. Eliminieren Sie den Offizier und durchsuchen Sie die Leiche.</German>
+        <Italian>I servizi segreti indicano che un ufficiale del cartello è in possesso delle rotte marittime e dei programmi logistici. Elimina l'ufficiale e perquisisci il corpo per mettere al sicuro i documenti.</Italian>
+        <Polish>Wywiad donosi, że oficer kartelu posiada trasy żeglugowe i plany logistyczne. Wyeliminuj oficera i przeszukaj jego ciało, aby zabezpieczyć dokumenty.</Polish>
+        <Portuguese>Os relatórios de inteligência indicam que um oficial do cartel detém rotas marítimas e cronogramas logísticos. Elimine o oficial e reviste o corpo para proteger as informações.</Portuguese>
+        <Russian>Разведка сообщает, что у офицера картеля находятся маршруты поставок и графики перевозок. Ликвидируйте офицера и обыщите тело для изъятия документов.</Russian>
+        <Czech>Zpravodajské informace naznačují, že důstojník kartelu má u sebe námořní trasy a logistické plány. Zlikvidujte důstojníka a prohledejte tělo pro zajištění dat.</Czech>
+        <Korean>정보에 따르면 카르텔 장교가 해상 운송 경로 및 물류 일정을 보유하고 있습니다. 장교를 제거하고 시신을 수색하여 기밀을 확보하십시오.</Korean>
+        <Japanese>情報によると、カルテルの将校が輸送ルートと兵站スケジュールを所持しています。将校を排除し、遺体を捜索して情報を確保してください。</Japanese>
+        <Chinese>情報顯示一名卡特爾軍官持有航運路線與後勤排程。消滅該軍官並搜查遺體以獲取機密。</Chinese>
+        <Chinesesimp>情报显示一名卡特尔军官持有航运路线与后勤排程。消灭该军官并搜查遗体以获取机密。</Chinesesimp>
+        <Turkish>İstihbarat raporları, bir kartel subayının sevkiyat rotalarını ve lojistik programlarını taşıdığını gösteriyor. Subayı etkisiz hale getirin ve cesedini arayarak belgeleri ele geçirin.</Turkish>
+    </Key>
+    <Key ID="STR_LL_Task_01_Action">
+        <Original>Search Body (Documents)</Original>
+        <English>Search Body (Documents)</English>
+        <French>Fouiller le corps (Documents)</French>
+        <Spanish>Registrar el cuerpo (Documentos)</Spanish>
+        <German>Leiche durchsuchen (Dokumente)</German>
+        <Italian>Perquisisci il corpo (Documenti)</Italian>
+        <Polish>Przeszukaj ciało (Dokumenty)</Polish>
+        <Portuguese>Revistar o corpo (Documentos)</Portuguese>
+        <Russian>Обыскать тело (Документы)</Russian>
+        <Czech>Prohledat tělo (Dokumenty)</Czech>
+        <Korean>시신 수색 (문서)</Korean>
+        <Japanese>遺体を捜索 (文書)</Japanese>
+        <Chinese>搜查遺體 (文件)</Chinese>
+        <Chinesesimp>搜查遗体 (文件)</Chinesesimp>
+        <Turkish>Üzerini Ara (Belgeler)</Turkish>
+    </Key>
+    <Key ID="STR_LL_Task_01_Retrieved">
+        <Original>Confidential documents retrieved.</Original>
+        <English>Confidential documents retrieved.</English>
+        <French>Documents confidentiels récupérés.</French>
+        <Spanish>Documentos confidenciales recuperados.</Spanish>
+        <German>Vertrauliche Dokumente sichergestellt.</German>
+        <Italian>Documenti riservati recuperati.</Italian>
+        <Polish>Poufne dokumenty odzyskane.</Polish>
+        <Portuguese>Documentos confidenciais recuperados.</Portuguese>
+        <Russian>Конфиденциальные документы изъяты.</Russian>
+        <Czech>Důvěrné dokumenty zajištěny.</Czech>
+        <Korean>기밀 문서가 회수되었습니다.</Korean>
+        <Japanese>機密文書を回収しました。</Japanese>
+        <Chinese>已獲取機密文件。</Chinese>
+        <Chinesesimp>已获取机密文件。</Chinesesimp>
+        <Turkish>Gizli belgeler ele geçirildi.</Turkish>
+    </Key>
+</Keys>

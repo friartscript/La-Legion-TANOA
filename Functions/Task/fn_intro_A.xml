@@ -102,4 +102,55 @@
         <Chinesesimp>如果想活命，请仔细阅读作战简报。</Chinesesimp>
         <Turkish>Hayatta kalmak istiyorsanız operasyonel brifingi inceleyin.</Turkish>
     </Key>
+    <Key ID="STR_LL_Intro_Theatre">
+        <Original>THEATRE OF OPERATIONS — TANOA</Original>
+        <English>THEATRE OF OPERATIONS — TANOA</English>
+        <French>THÉÂTRE D'OPÉRATIONS — TANOA</French>
+        <Spanish>TEATRO DE OPERACIONES — TANOA</Spanish>
+        <German>EINSATZGEBIET — TANOA</German>
+        <Italian>TEATRO DI OPERAZIONI — TANOA</Italian>
+        <Polish>TEATR DZIAŁAŃ — TANOA</Polish>
+        <Portuguese>TEATRO DE OPERAÇÕES — TANOA</Portuguese>
+        <Russian>ТЕАТР ВОЕННЫХ ДЕЙСТВИЙ — ТАНОА</Russian>
+        <Czech>BOJIŠTĚ — TANOA</Czech>
+        <Korean>작전 지역 — 타노아</Korean>
+        <Japanese>作戦地域 — タノア</Japanese>
+        <Chinese>作戰區域 — 塔諾亞</Chinese>
+        <Chinesesimp>作战区域 — 塔诺亚</Chinesesimp>
+        <Turkish>HAREKÂT ALANI — TANOA</Turkish>
+    </Key>
+    <Key ID="STR_LL_Intro_Classification">
+        <Original>MILITARY OPERATION // CLASSIFIED DEFENSE</Original>
+        <English>MILITARY OPERATION // CLASSIFIED DEFENSE</English>
+        <French>OPÉRATION MILITAIRE // CONFIDENTIEL DÉFENSE</French>
+        <Spanish>OPERACIÓN MILITAR // SECRETO DE DEFENSA</Spanish>
+        <German>MILITÄRISCHE OPERATION // VERMEIDLICH GEHEIM</German>
+        <Italian>OPERAZIONE MILITARE // SEGRETO MILITARE</Italian>
+        <Polish>OPERACJA WOJSKOWA // ŚCIŚLE TAJNE</Polish>
+        <Portuguese>OPERAÇÃO MILITAR // CONFIDENCIAL DE DEFESA</Portuguese>
+        <Russian>ВОЕННАЯ ОПЕРАЦИЯ // СОВЕРШЕННО СЕКРЕТНО</Russian>
+        <Czech>VOJENSKÁ OPERACE // PŘÍSNĚ TAJNÉ</Czech>
+        <Korean>군사 작전 // 1급 군사 기밀</Korean>
+        <Japanese>軍事作戦 // 軍事機密</Japanese>
+        <Chinese>軍事行動 // 機密防衛</Chinese>
+        <Chinesesimp>军事行动 // 机密防卫</Chinesesimp>
+        <Turkish>ASKERİ HAREKÂT // GİZLİ SAVUNMA</Turkish>
+    </Key>
+    <Key ID="STR_LL_Intro_Motto">
+        <Original>HONNEUR ET FIDÉLITÉ</Original>
+        <English>HONOR AND FIDELITY</English>
+        <French>HONNEUR ET FIDÉLITÉ</French>
+        <Spanish>HONOR Y FIDELIDAD</Spanish>
+        <German>EHRE UND TREUE</German>
+        <Italian>ONORE E FEDELTÀ</Italian>
+        <Polish>HONOR I WIERNOŚĆ</Polish>
+        <Portuguese>HONRA E FIDELIDADE</Portuguese>
+        <Russian>ЧЕСТЬ И ВЕРНОСТЬ</Russian>
+        <Czech>ČEST A VĚRNOST</Czech>
+        <Korean>명예와 충성</Korean>
+        <Japanese>名誉と忠誠</Japanese>
+        <Chinese>榮譽與忠誠</Chinese>
+        <Chinesesimp>荣誉与忠诚</Chinesesimp>
+        <Turkish>ONUR VE SADAKAT</Turkish>
+    </Key>
 </Keys>

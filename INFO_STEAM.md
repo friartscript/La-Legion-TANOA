@@ -7,10 +7,10 @@
 
 ```bbcode
 [h1]LA LÉGION [FrenchPoint] — TANOA[/h1]
-[b]Mode :[/b] Solo (SP) & Coopératif 1-6 (COOP)
+[b]Mode :[/b] Solo (SP) & Coopératif 1-6 (COOP) — [i]IA d'escouade disponibles en multijoueur (activables ou désactivables par l'hôte dans le lobby)[/i]
 [b]Carte :[/b] Tanoa (DLC Apex requis)
 [b]Faction :[/b] Légion Étrangère (Opération FrenchPoint)
-[b]Multilingue :[/b] 14 langues supportées nativement (FR, EN, DE, ES, IT, PL, PT, RU, CZ, KR, JP, CN, TR)
+[b]Multilingue :[/b] 15 langues supportées nativement (FR, EN, DE, ES, IT, PL, PT, RU, CZ, KR, JP, CN, TR...)
 
 [hr][/hr]
 
@@ -24,6 +24,7 @@ Avec soutien drone, soutien aérien, livraison de munitions et de véhicule poss
 
 [h2]■ EN BREF[/h2]
 Aux commandes d'une escouade de la Légion Étrangère, menez une succession d'opérations spéciales contre un cartel retranché dans la jungle de Tanoa : sauvetage d'otage, destruction de stations radio, cibles prioritaires (HVT), cargaisons chimiques et neutralisation de batteries antiaériennes DCA.
+En multijoueur, les équipiers IA peuvent compléter les places vacantes pour toujours opérer à 6 (ou être désactivés par l'hôte dans le salon des rôles).
 
 [hr][/hr]
 
@@ -51,10 +52,10 @@ Si vous jouez avec ACE3, activez simplement le patch officiel de compatibilité 
 
 ```bbcode
 [h1]THE LEGION [FrenchPoint] — TANOA[/h1]
-[b]Mode:[/b] Singleplayer (SP) & Cooperative 1-6 (COOP)
+[b]Mode:[/b] Singleplayer (SP) & Cooperative 1-6 (COOP) — [i]AI squadmates available in multiplayer (can be toggled on/off by host in lobby)[/i]
 [b]Map:[/b] Tanoa (Apex DLC required)
 [b]Faction:[/b] French Foreign Legion (Operation FrenchPoint)
-[b]Multiplayer & Languages:[/b] 14 languages supported natively (FR, EN, DE, ES, IT, PL, PT, RU, CZ, KR, JP, CN, TR)
+[b]Multiplayer & Languages:[/b] 15 languages supported natively (FR, EN, DE, ES, IT, PL, PT, RU, CZ, KR, JP, CN, TR...)
 
 [hr][/hr]
 
@@ -68,6 +69,7 @@ With drone support, close air support, ammo resupply, and vehicle delivery avail
 
 [h2]■ OVERVIEW[/h2]
 Commanding a French Foreign Legion strike team, complete a dynamic chain of high-intensity operations against an armed cartel in the jungles of Tanoa: hostage rescue, radio relay destruction, high-value targets (HVT), chemical cargo seizures, and anti-aircraft DCA elimination.
+In multiplayer, AI squadmates can fill any unassigned slots to maintain a full 6-man team (or be disabled by the host in the role selection lobby).
 
 [hr][/hr]
 

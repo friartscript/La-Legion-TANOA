@@ -45,7 +45,7 @@ missionNamespace setVariable ["MISSION_intro_finished", false, true];
 
     private _vehClass = missionNamespace getVariable ["MISSION_var_selected_vehicle_class", "OFrP_P4_FR_CE"];
 
-    [_firstMarker, _startLZ, _vehClass] spawn LL_fnc_intro_01;
+    [_firstMarker, _startLZ, _vehClass] spawn LL_fnc_intro_A;
 
     [_startLZ, 400, 15, _primaryTargetPos] spawn LL_fnc_ambientCivilians;
     [_primaryTargetPos, 400, 30, _startLZ] spawn LL_fnc_ambientCivilians;

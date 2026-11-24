@@ -77,7 +77,7 @@ private _verses = [
         if (_text == "" || _text == _strKey) then { _text = _frText; };
 
         private _subText = parseText format [
-            "<t size='1.16' font='PuristaMedium' color='#FFFFFF' align='center' shadow='2'>« %1 »</t>",
+            "<t size='1.15' font='RobotoCondensed' color='#F8FAFC' align='center' shadow='2'>« %1 »</t>",
             _text
         ];
 

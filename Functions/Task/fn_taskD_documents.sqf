@@ -78,6 +78,7 @@ if (count _sitePrimary == 3) then {
 missionNamespace setVariable ["LL_g_usedTaskPos", _usedPositions];
 
 missionNamespace setVariable ["LL_TaskD_Doc_NumZones", _numSpawns, true];
+missionNamespace setVariable ["LL_TaskD_Doc_Triggered", false, true];
 private _targetIndex = floor random _numSpawns;
 missionNamespace setVariable ["LL_TaskD_Doc_AllUnits", [], true];
 private _officersData = [];
@@ -258,7 +259,7 @@ for "_i" from 0 to (_numSpawns - 1) do {
                 }];
             };
 
-            private _actionTitle = format ["<t color='#FFFF00'>%1</t>", "Fouiller le corps (Documents)"];
+            private _actionTitle = format ["<t color='#FFFF00'>%1</t>", localize "STR_LL_Task_01_Action"];
             
             [
                 _unit, 
@@ -276,7 +277,14 @@ for "_i" from 0 to (_numSpawns - 1) do {
                     if (missionNamespace getVariable ["LL_TaskD_Doc_Triggered", false]) exitWith {};
                     missionNamespace setVariable ["LL_TaskD_Doc_Triggered", true];
                     
-                    if (_caller canAdd "Item_Document_01_F") then { _caller addItem "Item_Document_01_F"; };
+                    private _docClass = "";
+                    {
+                        if (isClass (configFile >> "CfgWeapons" >> _x)) exitWith { _docClass = _x; };
+                    } forEach ["Files_F", "Document_01_F", "Item_File1"];
+                    if (_docClass != "" && { _caller canAdd _docClass }) then {
+                        _caller addItem _docClass;
+                    };
+                    systemChat (localize "STR_LL_Task_01_Retrieved");
                     
                     [_target, _actionId] call BIS_fnc_holdActionRemove;
                     [_unit] call (missionNamespace getVariable "LL_fnc_taskD_docComplete");
