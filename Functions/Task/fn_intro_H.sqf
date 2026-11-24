@@ -47,6 +47,14 @@ _heli setVelocity [0, 0, 5];
 _heli flyInHeight 80;
 _heli doMove _exitPos;
 
+[_heli] spawn {
+    params ["_h"];
+    sleep 2;
+    if (!isNull _h && {!isNull (driver _h)}) then {
+        (driver _h) action ["LandGearUp", _h];
+    };
+};
+
 [_heli, _destPos] spawn {
     params ["_h", "_dp"];
     waitUntil { sleep 2; (_h distance2D _dp) > 3000 || !alive _h };
@@ -135,8 +143,14 @@ if (!isNull _helipad) then {
     deleteVehicle _helipad;
 };
 
-if ((getLighting select 1) < 25) then {
-    player action ["NVGoggles", player];
+if (sunOrMoon < 0.2) then {
+    if (currentVisionMode player != 1) then {
+        player action ["NVGoggles", player];
+    };
+} else {
+    if (currentVisionMode player == 1) then {
+        player action ["nvGogglesOff", player];
+    };
 };
 
 cutText ["", "BLACK IN", 1.2];

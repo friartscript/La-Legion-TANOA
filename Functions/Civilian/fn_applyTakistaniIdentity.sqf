@@ -23,7 +23,7 @@ private _lastName = "";
 
 if (_isFemale) then {
     private _fNames = missionNamespace getVariable ["MISSION_CivilianNames_Female", []];
-    private _nameArr = if (count _fNames > 0) then { selectRandom _fNames } else { ["Fatima Said", "Fatima", "Said"] };
+    private _nameArr = if (count _fNames > 0) then { selectRandom _fNames } else { ["Moana Delai", "Moana", "Delai"] };
     _fullName = _nameArr select 0;
     _firstName = _nameArr select 1;
     _lastName = _nameArr select 2;
@@ -56,7 +56,7 @@ if (_isFemale) then {
     };
 } else {
     private _mNames = missionNamespace getVariable ["MISSION_CivilianNames_Male", []];
-    private _nameArr = if (count _mNames > 0) then { selectRandom _mNames } else { ["Ali Mohamed", "Ali", "Mohamed"] };
+    private _nameArr = if (count _mNames > 0) then { selectRandom _mNames } else { ["Atonio Ganilau", "Atonio", "Ganilau"] };
     _fullName = _nameArr select 0;
     _firstName = _nameArr select 1;
     _lastName = _nameArr select 2;
@@ -64,8 +64,8 @@ if (_isFemale) then {
     if (count _mFaces > 0) then {
         _unit setFace (selectRandom _mFaces);
     };
-    private _mVoices = missionNamespace getVariable ["MISSION_Voices_Male", ["Male01PER"]];
-    private _spk = if (count _mVoices > 0) then { selectRandom _mVoices } else { "Male01PER" };
+    private _mVoices = missionNamespace getVariable ["MISSION_Voices_Male", ["Male01FRE", "Male01ENGFRE", "Male01ENG"]];
+    private _spk = if (count _mVoices > 0) then { selectRandom _mVoices } else { "Male01FRE" };
     _unit setSpeaker _spk;
     _unit setPitch 1.0;
     [_unit, 1.0, _spk, _fullName, _firstName, _lastName] spawn {
@@ -111,10 +111,10 @@ if (!_isEnemy) then {
         };
     } else {
         private _uList = (missionNamespace getVariable ["MISSION_CivilianUniforms_Male", []]) select { isClass (configFile >> "CfgWeapons" >> _x) };
-        if (count _uList == 0) then { _uList = ["U_C_Poloshirt_blue", "U_C_Man_casual_1_F"]; };
+        if (count _uList == 0) then { _uList = ["U_C_Man_casual_1_F", "U_C_Man_casual_2_F", "U_C_man_sport_1_F", "U_C_Poloshirt_blue"]; };
         _unit forceAddUniform (selectRandom _uList);
         if (uniform _unit == "") then {
-            _unit forceAddUniform "U_C_Poloshirt_blue";
+            _unit forceAddUniform "U_C_Man_casual_1_F";
         };
 
         private _hatList = (missionNamespace getVariable ["MISSION_CivilianHats", []]) select { _x == "" || isClass (configFile >> "CfgWeapons" >> _x) };

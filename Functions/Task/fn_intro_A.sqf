@@ -140,7 +140,7 @@ private _initTgtPos = _heli modelToWorldVisual [0.0, -4, -0.36];
 
 private _cam = "camera" camCreate _initCamPos;
 _cam cameraEffect ["INTERNAL", "BACK"];
-if ((getLighting select 1) < 25) then { camUseNVG true; };
+if (sunOrMoon < 0.2) then { camUseNVG true; };
 
 _cam camSetPos _initCamPos;
 _cam camSetTarget _initTgtPos;

@@ -39,17 +39,16 @@ private _spawnedUnits = 0;
         private _grp = createGroup _spawnSide;
         private _fCivClasses = (missionNamespace getVariable ["MISSION_CivilianClasses_Female", []]) select { isClass (configFile >> "CfgVehicles" >> _x) && _x != "C_man_1" };
         private _fEnemyClasses = (missionNamespace getVariable ["MISSION_EnemyClasses_Female", []]) select { isClass (configFile >> "CfgVehicles" >> _x) && _x != "O_G_Soldier_F" };
+        private _mCivClasses = (missionNamespace getVariable ["MISSION_CivilianClasses_Male", ["C_Man_casual_1_F_tanoan", "C_Man_casual_2_F_tanoan", "C_man_1"]]) select { isClass (configFile >> "CfgVehicles" >> _x) };
+        if (count _mCivClasses == 0) then { _mCivClasses = ["C_man_1"]; };
+        private _mEnemyClasses = (missionNamespace getVariable ["MISSION_EnemyClasses_Male", ["I_C_Soldier_Bandit_1_F", "I_C_Soldier_Bandit_2_F", "O_G_Soldier_F"]]) select { isClass (configFile >> "CfgVehicles" >> _x) };
+        if (count _mEnemyClasses == 0) then { _mEnemyClasses = ["O_G_Soldier_F"]; };
         private _canSpawnFemale = if (_isEnemy) then { count _fEnemyClasses > 0 } else { count _fCivClasses > 0 };
-        private _isFemale = (random 1) < 0.40 && { _canSpawnFemale };
-        private _class = if (_spawnSide == civilian) then { "C_man_1" } else { "O_G_Soldier_F" };
-        if (_isFemale) then {
-            private _pool = if (_isEnemy) then { _fEnemyClasses } else { _fCivClasses };
-            if (count _pool > 0) then {
-                private _picked = selectRandom _pool;
-                if (!isNil "_picked" && { _picked != "" }) then {
-                    _class = _picked;
-                };
-            };
+        private _isFemale = (random 1) < 0.35 && { _canSpawnFemale };
+        private _class = if (_isFemale) then {
+            if (_isEnemy) then { selectRandom _fEnemyClasses } else { selectRandom _fCivClasses }
+        } else {
+            if (_spawnSide == civilian) then { selectRandom _mCivClasses } else { selectRandom _mEnemyClasses }
         };
         
         private _unit = _grp createUnit [_class, _bPos, [], 0, "NONE"];

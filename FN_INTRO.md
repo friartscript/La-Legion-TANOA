@@ -111,47 +111,54 @@ Une introduction militaire d'élite doit respecter trois piliers :
 
 ---
 
-### SÉQUENCE E (39.42s - 51.77s) : L'amorce de descente sécurisée vers la LZ
-- **Concept :** Première vue depuis le sol de la vraie LZ (zone plate dégagée garantie), téléobjectif captant l'arrivée du vecteur.
-- **Sécurisation de la trajectoire :** 
-  - L'hélicoptère est verrouillé sur son couloir d'approche final menant droit à l'héliport de la LZ (`_destPos`).
-  - Descente continue et contrôlée de 260 m à 65 m de la LZ (altitude 34 m à 14 m).
-  - Aucune dérive dans la forêt : l'IA ne peut pas s'égarer dans la jungle.
-- **Cadrage :** Caméra au sol à 50 mètres de la LZ, équivalent téléobjectif (FOV 0.40) cadrant l'appareil qui descend de face.
+### SÉQUENCE E (39.42s - 51.77s) : Approche Haute Sécurisée (Train Rentrée)
+- **Concept :** Première vue sol en longue focale depuis la LZ dégagée.
+- **Sécurisation de la trajectoire (Anti-arbres) :** 
+  - L'hélicoptère maintient une **haute altitude de sécurité** ($52\text{ m} \to 40\text{ m}$) en survolant la lisière forestière (fini l'atterrissage en ligne droite type avion qui frôlait les arbres).
+  - Train d'atterrissage maintenu **fermé/rentré** (`LandGearUp`).
+  - Distance passant de 320 m à 110 m de la LZ.
+- **Cadrage :** Caméra au sol à 55 mètres de la LZ, équivalent téléobjectif (FOV 0.38) cadrant l'appareil arrivant au-dessus de la cime des arbres.
 - **Typographie :** Mention discrète de création en bas à droite : `Scénario & Scripts : Friart Script` (size 0.95).
 - **Raccord vers F :** **Cut franc**.
 
 ---
 
-### SÉQUENCE F (51.77s - 61.33s) : La ressource (Flare) au-dessus de la LZ
-- **Concept :** Plan rasant au sol montrant la violence du souffle des pales sur la LZ.
-- **Sécurisation :** L'appareil freine de 65 m à 0 m directement à la verticale de l'héliport de la LZ, descendant de 14 m à 2.2 m au-dessus du sol.
-- **Cadrage :** Caméra à 1.30 m du sol sur le bord de la LZ (FOV 0.52). L'appareil cabre pour casser sa vitesse et s'immobilise en stationnaire bas.
+### SÉQUENCE F (51.77s - 61.33s) : Ressource (Flare) & Stationnaire Vertical (Train Rentrée)
+- **Concept :** Plan rasant au sol montrant la violence du souffle des pales sur la clairière.
+- **Sécurisation de la trajectoire :** 
+  - L'appareil franchit la lisière en altitude ($40\text{ m} \to 20\text{ m}$) et avance de 110 m à **0 m** (verticale exacte de l'héliport).
+  - Ressource (flare) : le pilote cabre pour casser toute vitesse horizontale ($14\text{ m/s} \to 0\text{ m/s}$).
+  - L'appareil se stabilise en stationnaire haut à $20\text{ m}$ à la verticale pile de la LZ, train toujours fermé.
+- **Cadrage :** Caméra à 1.40 m du sol sur le bord de la LZ (FOV 0.52).
 - **Typographie :** Écran 100% épuré.
 - **Raccord vers G :** **Cut raccord d'action**.
 
 ---
 
-### SÉQUENCE G (61.33s - 71.56s) : Le Touchdown sur l'héliport
-- **Concept :** Contact sol net et stabilisation des patins sur l'héliport de la LZ.
-- **Sécurisation :** Les patins touchent le sol à $t \approx 65\text{ s}$ sur la position exacte de la LZ (`_destPos`). Zéro décalage avec le véhicule P4 qui est positionné à 32 m sur le même terrain dégagé.
-- **Cadrage :** Caméra stable à 15 m cadrant l'amortissement des suspensions à l'impact.
+### SÉQUENCE G (61.33s - 71.56s) : Descente Droite Verticale, Sortie du Train & Touchdown
+- **Concept :** Véritable descente hélicoptère droite (« Descente Droite ») sur l'axe vertical de la LZ.
+- **Sortie du train :** Déploiement du train d'atterrissage pour cette unique séquence de descente finale (`LandGear` via le pilote).
+- **Sécurisation :** 
+  - Déplacement horizontal : **0.0 m** (l'hélicoptère est rigoureusement à l'aplomb de l'héliport).
+  - Descente verticale droite de $20\text{ m}$ à $0\text{ m}$ sur une durée de 7.2 secondes, avec amortissement doux avant le contact.
+  - Les roues touchent le sol à $t \approx 68.5\text{ s}$ sur la position exacte de la LZ (`_destPos`).
+  - Suspension comprimée, posé net sur l'héliport, stabilisation des patins.
+- **Cadrage :** Caméra stable à 18 m cadrant la descente verticale et le contact des roues avec le sol.
 - **Typographie :** Aucune.
 - **Raccord vers H :** **Cut raccord**.
 
 ---
 
-### SÉQUENCE H (71.56s - 80.28s) : Le départ du vecteur et bascule en vue subjective
-- **Concept :** Transition entre la cinématique et la prise de contrôle joueur.
-- **Cadrage :** 
-  - L'hélicoptère remet plein gaz et décolle en s'éloignant vers l'océan, laissant l'équipe au sol.
-  - La caméra pivote vers le groupe de légionnaires rassemblés autour du P4.
-  - Le légionnaire (joueur) est au centre du cadre.
+### SÉQUENCE H (71.56s - 80.28s) : Débarquement, Rentrée du Train & Départ
+- **Concept :** Débarquement coordonné des légionnaires, prise de position au P4 et décollage.
+- **Cinématique :**
+  - L'escouade débarque de l'appareil posé sur la LZ et s'établit en garde à 360° autour du VLTT P4.
+  - L'hélicoptère remet plein gaz, rentre son train d'atterrissage (`LandGearUp`) et prend de la vitesse vers le large.
+  - La caméra pivote vers le joueur et le groupe.
 - **Transition finale (80.28s) :**
   - Fondu au noir rapide et propre (`cutText ["", "BLACK OUT", 0.4]`).
-  - Destruction de la caméra, réassignation de la vue subjective joueur (`player switchCamera "INTERNAL"`).
-  - Fondu d'ouverture (`cutText ["", "BLACK IN", 1.2]`).
-  - L'arme est dans les mains du joueur, le bruit ambiant revient à 100%, la mission débute.
+  - Rétablissement de la vue subjective joueur (`player switchCamera "INTERNAL"`).
+  - Fondu d'ouverture (`cutText ["", "BLACK IN", 1.2]`). Mission lancée !
 
 ---
 

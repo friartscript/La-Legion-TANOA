@@ -113,14 +113,10 @@ for "_i" from 1 to _spawnCount do {
     if (_fleeStrategy == "FLEE_ROAD" && {!_hasRoads}) then { _fleeStrategy = "FLEE_DIRECT"; };
 
     private _fClasses = (missionNamespace getVariable ["MISSION_CivilianClasses_Female", []]) select { isClass (configFile >> "CfgVehicles" >> _x) && _x != "C_man_1" };
-    private _isFemale = (random 1) < 0.40 && { count _fClasses > 0 };
-    private _civClass = "C_man_1";
-    if (_isFemale) then {
-        private _picked = selectRandom _fClasses;
-        if (!isNil "_picked" && { _picked != "" }) then {
-            _civClass = _picked;
-        };
-    };
+    private _mClasses = (missionNamespace getVariable ["MISSION_CivilianClasses_Male", ["C_Man_casual_1_F_tanoan", "C_Man_casual_2_F_tanoan", "C_Man_casual_3_F_tanoan", "C_Man_casual_4_F_tanoan", "C_Man_casual_5_F_tanoan", "C_Man_casual_6_F_tanoan", "C_man_sport_1_F_tanoan", "C_man_sport_2_F_tanoan", "C_man_sport_3_F_tanoan", "C_man_1"]]) select { isClass (configFile >> "CfgVehicles" >> _x) };
+    if (count _mClasses == 0) then { _mClasses = ["C_man_1"]; };
+    private _isFemale = (random 1) < 0.35 && { count _fClasses > 0 };
+    private _civClass = if (_isFemale) then { selectRandom _fClasses } else { selectRandom _mClasses };
 
     private _grp = createGroup [civilian, true];
     private _civ = _grp createUnit [_civClass, _pos, [], 0, "CAN_COLLIDE"];

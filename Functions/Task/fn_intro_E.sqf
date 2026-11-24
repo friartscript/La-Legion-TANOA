@@ -3,15 +3,17 @@ _ctx params ["_cam", "_heli", "_destPos", "_startPos", "_allUnits", "_t0", "_hel
 
 call LL_fnc_camReset;
 
-private _camGround5 = [_destPos, 45, 65, _lzASL, 2.0] call LL_fnc_findOpenCamSpot;
+if (!isNull (driver _heli)) then { (driver _heli) action ["LandGearUp", _heli]; };
+
+private _camGround5 = [_destPos, 50, 70, _lzASL, 2.0] call LL_fnc_findOpenCamSpot;
 if (_camGround5 isEqualTo []) then {
-    private _fallback = _destPos getPos [50, (_inboundDir + 150) % 360];
+    private _fallback = _destPos getPos [55, (_inboundDir + 150) % 360];
     _camGround5 = [_fallback select 0, _fallback select 1, (getTerrainHeightASL _fallback) + 2.0];
 };
 
 _cam camSetPos (ASLToAGL _camGround5);
 _cam camSetTarget _destPos;
-_cam camSetFov 0.40;
+_cam camSetFov 0.38;
 _cam camCommit 0;
 waitUntil { camCommitted _cam };
 
@@ -33,19 +35,19 @@ private _ehPlan5 = addMissionEventHandler ["EachFrame", {
     private _inboundDir = missionNamespace getVariable ["LL_intro_inboundDir", 0];
     private _heliHeading = missionNamespace getVariable ["LL_intro_heliHeading", 180];
 
-    private _curDist = 260 - (_smooth * 195);
-    private _curH = 34 - (_smooth * 20);
+    private _curDist = 320 - (_smooth * 210);
+    private _curH = 52 - (_smooth * 12);
     private _hPos = _destPos getPos [_curDist, _inboundDir];
     _hPos set [2, _curH];
 
     _heli setPosATL _hPos;
     _heli setDir _heliHeading;
-    _heli setVelocity [sin _heliHeading * (22 - _smooth * 12), cos _heliHeading * (22 - _smooth * 12), -1.5];
+    _heli setVelocity [sin _heliHeading * (22 - _smooth * 8), cos _heliHeading * (22 - _smooth * 8), -0.9];
 
     private _wantASL = +_baseASL;
     _wantASL set [2, (_wantASL select 2) + (_smooth * 0.8)];
     private _tgtASL = getPosASLVisual _heli;
-    private _fov = 0.40 - (_smooth * 0.08);
+    private _fov = 0.38 - (_smooth * 0.06);
 
     [_cam, _wantASL, _tgtASL, _fov, [_heli], 0.015] call LL_fnc_camApply;
 }];

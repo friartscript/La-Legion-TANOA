@@ -3,9 +3,19 @@ _ctx params ["_cam", "_heli", "_destPos", "_startPos", "_allUnits", "_t0", "_hel
 
 call LL_fnc_camReset;
 
-private _camGround7 = [_destPos, 14, 20, _lzASL, 1.5] call LL_fnc_findOpenCamSpot;
+[_heli] spawn {
+    params ["_h"];
+    for "_i" from 1 to 6 do {
+        if (!isNull _h && {!isNull (driver _h)}) then {
+            (driver _h) action ["LandGear", _h];
+        };
+        sleep 0.5;
+    };
+};
+
+private _camGround7 = [_destPos, 16, 24, _lzASL, 1.5] call LL_fnc_findOpenCamSpot;
 if (_camGround7 isEqualTo []) then {
-    private _fallback = _destPos getPos [16, (_inboundDir + 120) % 360];
+    private _fallback = _destPos getPos [18, (_inboundDir + 120) % 360];
     _camGround7 = [_fallback select 0, _fallback select 1, (getTerrainHeightASL _fallback) + 1.5];
 };
 
@@ -32,14 +42,15 @@ private _ehPlan7 = addMissionEventHandler ["EachFrame", {
     private _destPos = missionNamespace getVariable ["MISSION_intro_lz", [0,0,0]];
     private _heliHeading = missionNamespace getVariable ["LL_intro_heliHeading", 180];
 
-    if (_elapsed < 3.8) then {
-        private _descentProg = _elapsed / 3.8;
-        private _curH = (2.2 * (1 - _descentProg)) max 0;
+    if (_elapsed < 7.2) then {
+        private _descentProg = (_elapsed / 7.2) min 1;
+        private _descentSmooth = _descentProg * _descentProg * (3 - 2 * _descentProg);
+        private _curH = (20.0 * (1 - _descentSmooth)) max 0;
         private _hPos = +_destPos;
         _hPos set [2, _curH];
         _heli setPosATL _hPos;
         _heli setDir _heliHeading;
-        _heli setVelocity [0, 0, -0.6 * (1 - _descentProg)];
+        _heli setVelocity [0, 0, -2.6 * (1 - _descentSmooth)];
     } else {
         private _gPos = +_destPos;
         _gPos set [2, 0];
