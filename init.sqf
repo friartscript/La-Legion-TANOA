@@ -99,6 +99,9 @@ if (isNil "LL_fnc_ensureUnitNVG") then {
     LL_fnc_ensureUnitNVG = {
         params [["_u", objNull, [objNull]]];
         if (isNull _u || { !alive _u }) exitWith {};
+        if (side _u == civilian) exitWith {};
+        if (_u getVariable ["not_Random", false]) exitWith {};
+        if (captive _u) exitWith {};
         if (!local _u) exitWith { [_u] remoteExecCall ["LL_fnc_ensureUnitNVG", _u]; };
         private _nvgClass = "NVGoggles_tna_F";
         if (!isClass (configFile >> "CfgWeapons" >> _nvgClass)) then { _nvgClass = "NVGogglesB_blk_F"; };
@@ -299,7 +302,7 @@ for "_i" from 0 to 6 do {
                 if (!isNull _u) then { _sq pushBackUnique _u; };
             };
             {
-                if (!isNull _x && { alive _x && { local _x && { hmd _x == "" } } }) then {
+                if (!isNull _x && { alive _x && { local _x && { hmd _x == "" && { side _x != civilian && { !(_x getVariable ["not_Random", false]) } } } } }) then {
                     [_x] call LL_fnc_ensureUnitNVG;
                 };
             } forEach _sq;

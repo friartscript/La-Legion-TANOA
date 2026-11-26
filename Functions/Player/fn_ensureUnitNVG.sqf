@@ -1,6 +1,9 @@
 params [["_u", objNull, [objNull]]];
 
 if (isNull _u || { !alive _u }) exitWith {};
+if (side _u == civilian) exitWith {};
+if (_u getVariable ["not_Random", false]) exitWith {};
+if (captive _u) exitWith {};
 
 if (!local _u) exitWith {
     [_u] remoteExecCall ["LL_fnc_ensureUnitNVG", _u];

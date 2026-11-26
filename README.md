@@ -93,7 +93,7 @@ L'introduction du scénario a été intégralement découpée en **8 séquences 
 
 ### 📍 1. Regroupement Procédural des Objectifs (Clustering & Plafond 2 000 m)
 * **Dynamisme Tactique Garanti :** Fini les traversées kilométriques fastidieuses ! Dès le choix de la LZ d'insertion, le moteur d'objectifs sélectionne la mission suivante dans un **rayon maximal de 2 000 mètres (2 km)**.
-* **Algorithme de Proximité Prioritaire :** Les sites disponibles sont automatiquement triés par ordre de distance croissante pour privilégier les zones de contact les plus cohérentes et proches.
+* **Algorithme de Proximité Prioritaire :** Le choix est d'abord un **tirage aléatoire de la zone (A, B, C, D, E)**, puis un tirage aléatoire du site de départ parmi les marqueurs de cette zone, puis de la chaîne de sites (2 ou 3) dans le rayon autorisé. La zone et les sites de la partie précédente sont mis en dernier choix (mémorisés dans le profil) pour éviter de refaire les mêmes lieux. La LZ d'hélicoptère et le point de dépose du véhicule restent soumis aux mêmes contrôles de sécurité (terrain plat, sans obstacle, sans eau).
 * **Système de Repli Adaptatif (4 Paliers de Sécurité) :** Si aucun secteur éligible n'est disponible sous 2 000 m, le moteur élargit intelligemment sa recherche (2 000 m → 3 000 m → 4 500 m → illimité), garantissant 100% de fiabilité de génération sans blocage de mission.
 * **Rejouabilité Infinie :** Emplacements des objectifs, garnisons ennemies, patrouilles de jungle, météo dynamique et points d'extraction changent à chaque partie.
 

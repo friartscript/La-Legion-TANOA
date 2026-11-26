@@ -116,7 +116,7 @@ STROPHE 3 (00:46 - 01:11)
  
 STROPHE 4 (01:11 - 01:30)
  V1   01:11.56 -> 01:15.33   (3.77 s)   "La Légion marche vers le front"
- V2   01:15.78 -> 01:20.07   (4.29 s)   "En chantant nous marchons"
+ V2   01:15.78 -> 01:20.07   (4.29 s)   "En chantant nous suivons"
  V3   01:20.58 -> 01:24.93   (4.35 s)   "Héritiers de ses traditions"
  V4   01:25.33 -> 01:30.12   (4.79 s)   "Nous aussi nous marchons"
  
